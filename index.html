@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestoría Digital y Federal - Sistema de Facturación</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emailjs-com/3.2.0/email.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e8ed;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-control:required {
+      border-left: 4px solid #e74c3c;
+    }
+
+    .form-control:required:valid {
+      border-left: 4px solid #27ae60;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .dropdown-section {
+      margin-bottom: 30px;
+    }
+
+    .dropdown-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .dropdown-header:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .dropdown-content {
+      display: none;
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      border: 2px solid #e1e8ed;
+    }
+
+    .dropdown-content.active {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .product-item:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .product-checkbox {
+      margin-right: 15px;
+      transform: scale(1.2);
+    }
+
+    .product-info {
+      flex: 1;
+      margin-right: 15px;
+    }
+
+    .product-code {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 0.9rem;
+    }
+
+    .product-name {
+      color: #2c3e50;
+      margin: 5px 0;
+      font-size: 0.95rem;
+    }
+
+    .product-price {
+      color: #27ae60;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .quantity-input {
+      width: 70px;
+      padding: 8px;
+      border: 2px solid #e1e8ed;
+      border-radius: 5px;
+      text-align: center;
+      margin-right: 10px;
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .product-item.selected .delete-btn {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .delete-btn:hover {
+      background: linear-gradient(135deg, #c0392b, #a93226);
+      transform: scale(1.05);
+    }
+
+    .package-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: 10px;
+      border-left: 5px solid #667eea;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .package-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .package-checkbox {
+      margin-right: 20px;
+      transform: scale(1.3);
+    }
+
+    .package-info {
+      flex: 1;
+    }
+
+    .package-code {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 1rem;
+    }
+
+    .package-description {
+      color: #2c3e50;
+      margin: 8px 0;
+      font-size: 1rem;
+    }
+
+    .package-price {
+      color: #27ae60;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+
+    .package-delete-btn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .package-item.selected .package-delete-btn {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .package-delete-btn:hover {
+      background: linear-gradient(135deg, #c0392b, #a93226);
+      transform: scale(1.05);
+    }
+
+    .health-section {
+      background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      border-left: 5px solid #e17055;
+    }
+
+    .health-checkbox {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 10px 10px 10px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
+    }
+
+    .btn-email:hover {
+      box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
+    }
+
+    .btn-clear {
+      background: linear-gradient(135deg, #fd79a8, #e84393);
+    }
+
+    .btn-clear:hover {
+      box-shadow: 0 10px 25px rgba(253, 121, 168, 0.3);
+    }
+
+    .btn-clear-all {
+      background: linear-gradient(135deg, #636e72, #2d3436);
+    }
+
+    .btn-clear-all:hover {
+      box-shadow: 0 10px 25px rgba(99, 110, 114, 0.3);
+    }
+
+    /* Total flotante */
+    .floating-total {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      font-size: 1.2rem;
+      font-weight: bold;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .floating-total:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      min-width: 400px;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .close:hover {
+      color: #333;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      z-index: 3000;
+      transform: translateX(350px);
+      transition: transform 0.3s ease;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .floating-total {
+        bottom: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        font-size: 1rem;
+      }
+      
+      .product-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      
+      .package-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🚗 Gestoría Digital y Federal</h1>
+      <p>Sistema profesional de facturación para licencias federales digitales</p>
+    </div>
+
+    <!-- Información del cliente -->
+    <div class="card">
+      <h2>📋 Información del Cliente</h2>
+      <div class="form-group">
+        <label for="nombreCliente">Nombre completo del cliente:</label>
+        <input type="text" id="nombreCliente" class="form-control" placeholder="Ingrese el nombre completo del cliente" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="celularCliente">Número de celular: *</label>
+        <input type="tel" id="celularCliente" class="form-control" placeholder="Ej: 55 1234 5678" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="emailCliente">Correo electrónico:</label>
+        <input type="email" id="emailCliente" class="form-control" placeholder="ejemplo@correo.com">
+      </div>
+
+      <div class="form-group">
+        <label for="empresaCliente">Empresa/Organización:</label>
+        <input type="text" id="empresaCliente" class="form-control" placeholder="Nombre de la empresa (opcional)">
+      </div>
+
+      <div class="form-group">
+        <label for="discapacidad">¿El cliente tiene alguna discapacidad?</label>
+        <select id="discapacidad" class="form-control" onchange="toggleObservaciones()">
+          <option value="Ninguna">Ninguna</option>
+          <option value="Visual">Visual</option>
+          <option value="Auditiva">Auditiva</option>
+          <option value="Motriz">Motriz</option>
+          <option value="Intelectual">Intelectual</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="observacionesGroup" style="display: none;">
+        <label for="observacionesDiscapacidad">Observaciones sobre la discapacidad:</label>
+        <textarea id="observacionesDiscapacidad" class="form-control" rows="3" placeholder="Describa específicamente el tipo y grado de discapacidad, así como cualquier consideración especial que deba tomarse en cuenta para los exámenes médicos..."></textarea>
+      </div>
+    </div>
+
+    <!-- Productos por categorías -->
+    <div class="card">
+      <h2>🛍️ Selección de Servicios</h2>
+      
+      <!-- Exámenes Médicos -->
+      <div class="dropdown-section">
+        <div class="dropdown-header" onclick="toggleDropdown('examenes')">
+          <span>🏥 Exámenes Psicofísicos</span>
+          <span class="arrow" id="arrow-examenes">▼</span>
+        </div>
+        <div class="dropdown-content" id="examenes">
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="3500" data-code="CF01" data-name="EXAMEN PSICOFISICO INTEGRAL SCT PRESENCIAL" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF01</div>
+              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL SCT PRESENCIAL</div>
+              <div class="product-price">$3,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="5500" data-code="CF02" data-name="EXAMEN PSICOFISICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF02</div>
+              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL</div>
+              <div class="product-price">$5,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="16000" data-code="CF17" data-name="EXAMEN PSICOFISICO INTEGRAL NP" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF17</div>
+              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP</div>
+              <div class="product-price">$16,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="20000" data-code="CF18" data-name="EXAMEN PSICOFISICO INTEGRAL NP EXPRES" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF18</div>
+              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP EXPRES</div>
+              <div class="product-price">$20,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cursos de Capacitación -->
+      <div class="dropdown-section">
+        <div class="dropdown-header" onclick="toggleDropdown('cursos')">
+          <span>📚 Cursos de Capacitación</span>
+          <span class="arrow" id="arrow-cursos">▼</span>
+        </div>
+        <div class="dropdown-content" id="cursos">
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF03" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT A" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF03</div>
+              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT A</div>
+              <div class="product-price">$1,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF04" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT B" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF04</div>
+              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT B</div>
+              <div class="product-price">$1,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF05" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E MyRP" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF05</div>
+              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E MyRP</div>
+              <div class="product-price">$1,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF06" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E DA" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF06</div>
+              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E DA</div>
+              <div class="product-price">$1,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF07" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT F" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF07</div>
+              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT F</div>
+              <div class="product-price">$1,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Licencias Digitales -->
+      <div class="dropdown-section">
+        <div class="dropdown-header" onclick="toggleDropdown('licencias')">
+          <span>🆔 Licencias Federales Digitales</span>
+          <span class="arrow" id="arrow-licencias">▼</span>
+        </div>
+        <div class="dropdown-content" id="licencias">
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="205" data-code="CF08" data-name="PAGO DE DERECHOS" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF08</div>
+              <div class="product-name">PAGO DE DERECHOS</div>
+              <div class="product-price">$205.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="295" data-code="CF09" data-name="DIGITALIZACION LICENCIA FEDERAL" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF09</div>
+              <div class="product-name">DIGITALIZACIÓN LICENCIA FEDERAL</div>
+              <div class="product-price">$295.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF10" data-name="LICENCIA FEDERAL DIGITAL INTERNACIONAL" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF10</div>
+              <div class="product-name">LICENCIA FEDERAL DIGITAL INTERNACIONAL</div>
+              <div class="product-price">$1,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF11" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA A, B, F" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF11</div>
+              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA A, B, F</div>
+              <div class="product-price">$1,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF12" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E MyRP" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF12</div>
+              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E MyRP</div>
+              <div class="product-price">$2,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF13" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E DA" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF13</div>
+              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E DA</div>
+              <div class="product-price">$2,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicios Adicionales -->
+      <div class="dropdown-section">
+        <div class="dropdown-header" onclick="toggleDropdown('adicionales')">
+          <span>⚙️ Servicios Adicionales</span>
+          <span class="arrow" id="arrow-adicionales">▼</span>
+        </div>
+        <div class="dropdown-content" id="adicionales">
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF14" data-name="ADICION O CAMBIO DE CATEGORIA CAT A, B y F" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF14</div>
+              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT A, B y F</div>
+              <div class="product-price">$1,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF15" data-name="ADICION O CAMBIO DE CATEGORIA CAT E MyRP" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF15</div>
+              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E MyRP</div>
+              <div class="product-price">$2,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF16" data-name="ADICION O CAMBIO DE CATEGORIA CAT E DA" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF16</div>
+              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E DA</div>
+              <div class="product-price">$2,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF19" data-name="LOGISTICA y GASTOS ADICIONALES (TERRESTRE)" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF19</div>
+              <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (TERRESTRE)</div>
+              <div class="product-price">$2,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="5000" data-code="CF20" data-name="LOGISTICA y GASTOS ADICIONALES (AEREO) NACIONAL FORANEO" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF20</div>
+              <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (AÉREO) NACIONAL FORÁNEO</div>
+              <div class="product-price">$5,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="12500" data-code="CF21" data-name="DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF21</div>
+              <div class="product-name">DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS</div>
+              <div class="product-price">$12,500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="700" data-code="CF22" data-name="PENALIZACION POR PAGO TARDIO CADA UNO" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF22</div>
+              <div class="product-name">PENALIZACIÓN POR PAGO TARDÍO CADA UNO</div>
+              <div class="product-price">$700.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF23" data-name="PENALIZACION POR NO ASISTENCIA AL EXAMEN MEDICO" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF23</div>
+              <div class="product-name">PENALIZACIÓN POR NO ASISTENCIA AL EXAMEN MÉDICO</div>
+              <div class="product-price">$1,000.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+          
+          <div class="product-item">
+            <input type="checkbox" class="product-checkbox" data-price="500" data-code="CF24" data-name="REAGENDAR CITA MEDICA" onchange="updateProductSelection(this)">
+            <div class="product-info">
+              <div class="product-code">CF24</div>
+              <div class="product-name">REAGENDAR CITA MÉDICA</div>
+              <div class="product-price">$500.00</div>
+            </div>
+            <input type="number" class="quantity-input" min="1" value="1">
+            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paquetes especiales -->
+    <div class="card">
+      <h2>📦 Paquetes Especiales</h2>
+      
+      <div class="package-item">
+        <input type="checkbox" class="package-checkbox" data-price="5000" data-code="PK01" data-name="COTIZACION LFD SCT (Incluye CF01, CF04, CF08, CF09)" onchange="updatePackageSelection(this)">
+        <div class="package-info">
+          <div class="package-code">PK01</div>
+          <div class="package-description">COTIZACIÓN LFD SCT (Incluye CF01, CF04, CF08, CF09)</div>
+          <div class="package-price">$5,000.00</div>
+        </div>
+        <button class="package-delete-btn" onclick="removePackage(this)">❌ Quitar</button>
+      </div>
+      
+      <div class="package-item">
+        <input type="checkbox" class="package-checkbox" data-price="10500" data-code="PK02" data-name="COTIZACION LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)" onchange="updatePackageSelection(this)">
+        <div class="package-info">
+          <div class="package-code">PK02</div>
+          <div class="package-description">COTIZACIÓN LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)</div>
+          <div class="package-price">$10,500.00</div>
+        </div>
+        <button class="package-delete-btn" onclick="removePackage(this)">❌ Quitar</button>
+      </div>
+    </div>
+
+    <!-- Parámetros de salud -->
+    <div class="card">
+      <div class="health-section">
+        <h2>⚕️ Parámetros de Salud</h2>
+        <p style="margin-bottom: 15px;">Es importante que el cliente lea y comprenda las condiciones de salud antes de proceder con los exámenes médicos.</p>
+        <label style="display: flex; align-items: center; cursor: pointer;">
+          <input type="checkbox" id="aceptaSalud" class="health-checkbox">
+          <span>Confirmo que el cliente ha leído y acepta los parámetros de salud requeridos</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions">
+      <button class="btn" onclick="generarFacturaPDF()">
+        📄 Descargar Factura PDF
+      </button>
+      <button class="btn btn-email" onclick="mostrarModalEmail()">
+        📧 Enviar por Email
+      </button>
+      <button class="btn btn-clear" onclick="limpiarSeleccionados()">
+        🧹 Limpiar Seleccionados
+      </button>
+      <button class="btn btn-clear-all" onclick="limpiarTodo()">
+        🗑️ Limpiar Todo
+      </button>
+    </div>
+  </div>
+
+  <!-- Total flotante -->
+  <div class="floating-total" id="totalFlotante">
+    💰 Total: $0.00
+  </div>
+
+  <!-- Modal para envío de email -->
+  <div id="emailModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="cerrarModalEmail()">&times;</span>
+      <h2>📧 Enviar Factura por Email</h2>
+      <p>La factura será enviada al correo electrónico proporcionado del cliente.</p>
+      <div class="form-group">
+        <label>Correo del cliente:</label>
+        <input type="email" id="emailModalInput" class="form-control" placeholder="ejemplo@correo.com">
+      </div>
+      <button class="btn btn-email" onclick="enviarPorEmail()">Enviar Factura</button>
+    </div>
+  </div>
+
+  <!-- Notificación -->
+  <div id="notification" class="notification">
+    <span id="notificationText"></span>
+  </div>
+
+  <script>
+    // Función para mostrar/ocultar observaciones de discapacidad
+    function toggleObservaciones() {
+      const discapacidad = document.getElementById("discapacidad").value;
+      const observacionesGroup = document.getElementById("observacionesGroup");
+      
+      if (discapacidad !== "Ninguna") {
+        observacionesGroup.style.display = "block";
+      } else {
+        observacionesGroup.style.display = "none";
+        document.getElementById("observacionesDiscapacidad").value = "";
+      }
+    }
+
+    let totalGlobal = 0;
+
+    // Funciones para mostrar/ocultar dropdowns
+    function toggleDropdown(id) {
+      const content = document.getElementById(id);
+      const arrow = document.getElementById('arrow-' + id);
+      
+      if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        arrow.classList.remove('rotated');
+      } else {
+        content.classList.add('active');
+        arrow.classList.add('rotated');
+      }
+    }
+
+    // Función para mostrar notificaciones
+    function mostrarNotificacion(mensaje, tipo = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notificationText');
+      
+      notificationText.textContent = mensaje;
+      notification.classList.add('show');
+      
+      if (tipo === 'error') {
+        notification.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+      } else {
+        notification.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+      }
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Actualizar selección de productos
+    function updateProductSelection(checkbox) {
+      const productItem = checkbox.closest('.product-item');
+      if (checkbox.checked) {
+        productItem.classList.add('selected');
+      } else {
+        productItem.classList.remove('selected');
+      }
+      calcularTotal();
+    }
+
+    // Actualizar selección de paquetes
+    function updatePackageSelection(checkbox) {
+      const packageItem = checkbox.closest('.package-item');
+      if (checkbox.checked) {
+        packageItem.classList.add('selected');
+      } else {
+        packageItem.classList.remove('selected');
+      }
+      calcularTotal();
+    }
+
+    // Función para remover producto individual
+    function removeProduct(button) {
+      const productItem = button.closest('.product-item');
+      const checkbox = productItem.querySelector('.product-checkbox');
+      const productName = productItem.querySelector('.product-name').textContent;
+      
+      checkbox.checked = false;
+      productItem.classList.remove('selected');
+      calcularTotal();
+      mostrarNotificacion(`Producto "${productName}" eliminado de la selección`);
+    }
+
+    // Función para remover paquete
+    function removePackage(button) {
+      const packageItem = button.closest('.package-item');
+      const checkbox = packageItem.querySelector('.package-checkbox');
+      const packageName = packageItem.querySelector('.package-description').textContent;
+      
+      checkbox.checked = false;
+      packageItem.classList.remove('selected');
+      calcularTotal();
+      mostrarNotificacion(`Paquete "${packageName}" eliminado de la selección`);
+    }
+
+    // Limpiar solo productos seleccionados
+    function limpiarSeleccionados() {
+      let contadorEliminados = 0;
+      
+      // Limpiar productos
+      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.closest('.product-item').classList.remove('selected');
+        contadorEliminados++;
+      });
+      
+      // Limpiar paquetes
+      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.closest('.package-item').classList.remove('selected');
+        contadorEliminados++;
+      });
+      
+      calcularTotal();
+      
+      if (contadorEliminados > 0) {
+        mostrarNotificacion(`Se eliminaron ${contadorEliminados} elementos de la selección`);
+      } else {
+        mostrarNotificacion('No había elementos seleccionados para eliminar', 'error');
+      }
+    }
+
+    // Limpiar todo el formulario
+    function limpiarTodo() {
+      if (confirm('¿Está seguro de que desea limpiar todos los datos? Esta acción no se puede deshacer.')) {
+        // Limpiar información del cliente
+        document.getElementById('nombreCliente').value = '';
+        document.getElementById('celularCliente').value = '';
+        document.getElementById('emailCliente').value = '';
+        document.getElementById('empresaCliente').value = '';
+        document.getElementById('discapacidad').value = 'Ninguna';
+        document.getElementById('observacionesDiscapacidad').value = '';
+        document.getElementById('observacionesGroup').style.display = 'none';
+        document.getElementById('aceptaSalud').checked = false;
+        
+        // Limpiar productos
+        document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+          checkbox.checked = false;
+          checkbox.closest('.product-item').classList.remove('selected');
+        });
+        
+        // Limpiar paquetes
+        document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+          checkbox.checked = false;
+          checkbox.closest('.package-item').classList.remove('selected');
+        });
+        
+        // Resetear cantidades
+        document.querySelectorAll('.quantity-input').forEach(input => {
+          input.value = 1;
+        });
+        
+        // Cerrar todos los dropdowns
+        document.querySelectorAll('.dropdown-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.arrow').forEach(arrow => {
+          arrow.classList.remove('rotated');
+        });
+        
+        calcularTotal();
+        mostrarNotificacion('Todos los datos han sido limpiados correctamente');
+      }
+    }
+
+    // Función para limpiar después de generar factura
+    function limpiarDespuesDeFactura() {
+      // Limpiar información del cliente
+      document.getElementById('nombreCliente').value = '';
+      document.getElementById('celularCliente').value = '';
+      document.getElementById('emailCliente').value = '';
+      document.getElementById('empresaCliente').value = '';
+      document.getElementById('discapacidad').value = 'Ninguna';
+      document.getElementById('observacionesDiscapacidad').value = '';
+      document.getElementById('observacionesGroup').style.display = 'none';
+      document.getElementById('aceptaSalud').checked = false;
+      
+      // Limpiar productos
+      document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.closest('.product-item').classList.remove('selected');
+      });
+      
+      // Limpiar paquetes
+      document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.closest('.package-item').classList.remove('selected');
+      });
+      
+      // Resetear cantidades
+      document.querySelectorAll('.quantity-input').forEach(input => {
+        input.value = 1;
+      });
+      
+      calcularTotal();
+      mostrarNotificacion(`Factura ${codigoFactura} generada exitosamente. Formulario limpiado para el próximo cliente.`);
+    }
+
+    // Calcular total dinámicamente
+    function calcularTotal() {
+      let total = 0;
+      
+      // Productos individuales
+      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+        const price = parseFloat(checkbox.dataset.price);
+        const quantity = parseInt(checkbox.parentElement.querySelector('.quantity-input').value);
+        total += price * quantity;
+      });
+      
+      // Paquetes
+      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
+        const price = parseFloat(checkbox.dataset.price);
+        total += price;
+      });
+      
+      totalGlobal = total;
+      document.getElementById('totalFlotante').innerHTML = `💰 Total: ${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`;
+    }
+
+    // Event listeners para actualizar total
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inputs de cantidad
+      document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('input', calcularTotal);
+      });
+      
+      // Inicializar total
+      calcularTotal();
+    });
+
+    // Generar PDF
+    function generarFacturaPDF() {
+      if (!validarFormulario()) {
+        return;
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Datos del cliente
+      const nombre = document.getElementById("nombreCliente").value || "Cliente sin nombre";
+      const celular = document.getElementById("celularCliente").value || "Sin teléfono";
+      const email = document.getElementById("emailCliente").value || "Sin email";
+      const empresa = document.getElementById("empresaCliente").value || "Particular";
+      const discapacidad = document.getElementById("discapacidad").value;
+      const observacionesDiscapacidad = document.getElementById("observacionesDiscapacidad").value || "Sin observaciones adicionales";
+      const aceptaSalud = document.getElementById("aceptaSalud").checked;
+
+      let productos = [];
+      let total = 0;
+
+      // Procesar productos seleccionados
+      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+        const price = parseFloat(checkbox.dataset.price);
+        const code = checkbox.dataset.code;
+        const name = checkbox.dataset.name;
+        const quantity = parseInt(checkbox.parentElement.querySelector('.quantity-input').value);
+        const subtotal = price * quantity;
+        
+        total += subtotal;
+        productos.push([
+          code,
+          name,
+          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`,
+          quantity,
+          `${subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2})}`
+        ]);
+      });
+
+      // Procesar paquetes seleccionados
+      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
+        const price = parseFloat(checkbox.dataset.price);
+        const code = checkbox.dataset.code;
+        const name = checkbox.dataset.name;
+        
+        total += price;
+        productos.push([
+          code,
+          name,
+          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`,
+          1,
+          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`
+        ]);
+      });
+
+      // Encabezado de la empresa
+      doc.setFillColor(102, 126, 234);
+      doc.rect(0, 0, 220, 40, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont(undefined, 'bold');
+      doc.text("GESTORÍA DIGITAL Y FEDERAL", 105, 15, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      doc.text("Sistema profesional de facturación para licencias federales digitales", 105, 25, { align: 'center' });
+      
+      // Generar código único de factura (más corto)
+      const fechaActual = new Date();
+      const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+      const dia = fechaActual.getDate().toString().padStart(2, '0');
+      const hora = fechaActual.getHours().toString().padStart(2, '0');
+      const minuto = fechaActual.getMinutes().toString().padStart(2, '0');
+      const codigoFactura = `GDF${mes}${dia}${hora}${minuto}`;
+      
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.text("FACTURA", 105, 50, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      doc.text(`Código: ${codigoFactura}`, 105, 58, { align: 'center' });
+
+      // Información del cliente
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      
+      // Sección de información del cliente con mejor formato
+      doc.setFillColor(248, 249, 250);
+      doc.rect(15, 65, 180, 35, 'F');
+      doc.setDrawColor(102, 126, 234);
+      doc.rect(15, 65, 180, 35);
+      
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'bold');
+      doc.text("INFORMACIÓN DEL CLIENTE", 20, 73);
+      
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(10);
+      doc.text(`Cliente: ${nombre}`, 20, 81);
+      doc.text(`Empresa: ${empresa}`, 20, 87);
+      doc.text(`Teléfono: ${celular}`, 105, 81);
+      doc.text(`Email: ${email}`, 105, 87);
+      doc.text(`Fecha: ${new Date().toLocaleDateString('es-MX')}`, 105, 93);
+      
+      // Información médica
+      let yPos = 93;
+      doc.text(`Discapacidad: ${discapacidad}`, 20, yPos);
+      
+      if (discapacidad !== "Ninguna" && observacionesDiscapacidad !== "Sin observaciones adicionales") {
+        const observacionesLines = doc.splitTextToSize(`Observaciones: ${observacionesDiscapacidad}`, 175);
+        yPos += 6;
+        doc.text(observacionesLines, 20, yPos);
+        yPos += observacionesLines.length * 4;
+      }
+
+      // Tabla de productos
+      const startY = yPos > 93 ? yPos + 15 : 110;
+      
+      if (productos.length > 0) {
+        doc.autoTable({
+          startY: startY,
+          head: [['Código', 'Concepto', 'Precio Unit.', 'Cant.', 'Subtotal']],
+          body: productos,
+          styles: {
+            fontSize: 9,
+            cellPadding: 3
+          },
+          headStyles: {
+            fillColor: [102, 126, 234],
+            textColor: 255,
+            fontStyle: 'bold'
+          },
+          alternateRowStyles: {
+            fillColor: [248, 249, 250]
+          }
+        });
+      } else {
+        doc.text("No se seleccionaron productos o servicios.", 20, startY);
+      }
+
+      // Total
+      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : startY + 20;
+      
+      doc.setFillColor(0, 184, 148);
+      doc.rect(140, finalY - 5, 60, 15, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text(`TOTAL: ${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 170, finalY + 5, { align: 'center' });
+
+      // Información de salud
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      const textoSalud = aceptaSalud 
+        ? "✓ El cliente confirmó que leyó y acepta los parámetros de salud."
+        : "⚠ El cliente NO confirmó haber leído los parámetros de salud.";
+      doc.text(textoSalud, 20, finalY + 25);
+
+      // Footer
+      doc.setFontSize(8);
+      doc.text("Gestoría Digital y Federal - Sistema profesional de licencias federales digitales", 105, 280, { align: 'center' });
+
+      // Guardar PDF
+      doc.save(`Factura_${nombre.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+
+      // Limpiar formulario después de generar la factura
+      setTimeout(() => {
+        limpiarDespuesDeFactura();
+      }, 500);
+    }
+
+    // Modal de email
+    function mostrarModalEmail() {
+      if (!validarFormulario()) {
+        return;
+      }
+      
+      const emailCliente = document.getElementById("emailCliente").value;
+      document.getElementById("emailModalInput").value = emailCliente;
+      document.getElementById("emailModal").style.display = "block";
+    }
+
+    function cerrarModalEmail() {
+      document.getElementById("emailModal").style.display = "none";
+    }
+
+    function enviarPorEmail() {
+      const email = document.getElementById("emailModalInput").value;
+      
+      if (!email) {
+        mostrarNotificacion("Por favor, ingrese un correo electrónico válido.", "error");
+        return;
+      }
+
+      // Aquí simularemos el envío por email
+      mostrarNotificacion(`Funcionalidad de envío por email en desarrollo. La factura se enviaría a: ${email}`, "error");
+      
+      cerrarModalEmail();
+    }
+
+    // Cerrar modal al hacer clic fuera
+    window.onclick = function(event) {
+      const modal = document.getElementById("emailModal");
+      if (event.target === modal) {
+        cerrarModalEmail();
+      }
+    }
+
+    // Validaciones mejoradas
+    function validarFormulario() {
+      const nombre = document.getElementById("nombreCliente").value.trim();
+      const celular = document.getElementById("celularCliente").value.trim();
+      const aceptaSalud = document.getElementById("aceptaSalud").checked;
+      
+      if (!nombre) {
+        mostrarNotificacion("Por favor, ingrese el nombre del cliente.", "error");
+        document.getElementById("nombreCliente").focus();
+        return false;
+      }
+      
+      if (!celular) {
+        mostrarNotificacion("Por favor, ingrese el número de celular del cliente.", "error");
+        document.getElementById("celularCliente").focus();
+        return false;
+      }
+      
+      // Validar formato básico de teléfono
+      const telefonoRegex = /^[\d\s\-\(\)\+]+$/;
+      if (!telefonoRegex.test(celular)) {
+        mostrarNotificacion("Por favor, ingrese un número de teléfono válido.", "error");
+        document.getElementById("celularCliente").focus();
+        return false;
+      }
+      
+      if (!aceptaSalud) {
+        mostrarNotificacion("Debe confirmar que el cliente acepta los parámetros de salud.", "error");
+        document.getElementById("aceptaSalud").focus();
+        return false;
+      }
+      
+      if (totalGlobal === 0) {
+        mostrarNotificacion("Debe seleccionar al menos un producto o servicio.", "error");
+        return false;
+      }
+      
+      return true;
+    }
+  </script>
+</body>
+</html>
