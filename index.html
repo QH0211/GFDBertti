@@ -296,7 +296,8 @@
       transform: scale(1.05);
     }
 
-    .health-section {
+    /* Estilos del panel de salud */
+    .health-problems-section {
       background: linear-gradient(135deg, #ffeaa7, #fab1a0);
       padding: 25px;
       border-radius: 15px;
@@ -304,9 +305,54 @@
       border-left: 5px solid #e17055;
     }
 
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .health-item {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .health-item:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .health-problem-checkbox {
+      margin-right: 10px;
+      transform: scale(1.2);
+      accent-color: #e74c3c;
+    }
+
     .health-checkbox {
       margin-right: 10px;
       transform: scale(1.2);
+      accent-color: #00b894;
+    }
+
+    .health-warning {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .health-consent {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .health-consent:hover {
+      transform: scale(1.02);
+      transition: all 0.3s ease;
     }
 
     .btn {
@@ -480,6 +526,33 @@
         text-align: center;
         gap: 15px;
       }
+      
+      .health-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .health-item {
+        padding: 12px;
+      }
+      
+      .health-item span {
+        font-size: 14px;
+        line-height: 1.3;
+      }
+      
+      .health-warning {
+        padding: 15px;
+      }
+      
+      .health-consent {
+        padding: 20px;
+      }
+      
+      .modal-content {
+        min-width: 300px;
+        margin: 20px;
+      }
     }
   </style>
 </head>
@@ -528,6 +601,87 @@
       <div class="form-group" id="observacionesGroup" style="display: none;">
         <label for="observacionesDiscapacidad">Observaciones sobre la discapacidad:</label>
         <textarea id="observacionesDiscapacidad" class="form-control" rows="3" placeholder="Describa específicamente el tipo y grado de discapacidad, así como cualquier consideración especial que deba tomarse en cuenta para los exámenes médicos..."></textarea>
+      </div>
+    </div>
+
+    <!-- Panel de Salud Integral -->
+    <div class="card">
+      <h2>⚕️ Información Médica del Cliente</h2>
+      
+      <!-- Problemas de salud que debe avisar -->
+      <div class="health-problems-section">
+        <h3 style="color: #e74c3c; margin-bottom: 15px; font-size: 1.2rem;">🚨 Problemas de salud que debes avisar:</h3>
+        
+        <div class="health-grid">
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="medicamentos" class="health-problem-checkbox">
+              <span>💊 <strong>Medicamentos:</strong> presión, azúcar, pastillas, etc.</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="vista" class="health-problem-checkbox">
+              <span>👁 <strong>Vista:</strong> daltonismo, lentes, visión baja</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="dental" class="health-problem-checkbox">
+              <span>🦷 <strong>Dental:</strong> caries, muelas picadas, dientes faltantes</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="corazon" class="health-problem-checkbox">
+              <span>❤ <strong>Corazón:</strong> hipertensión, arritmias</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="diabetes" class="health-problem-checkbox">
+              <span>🩸 <strong>Diabetes:</strong> azúcar alta, hemoglobina</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="trigliceridos" class="health-problem-checkbox">
+              <span>🧈 <strong>Triglicéridos y colesterol:</strong> elevados</span>
+            </label>
+          </div>
+          
+          <div class="health-item">
+            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
+              <input type="checkbox" id="peso" class="health-problem-checkbox">
+              <span>⚖ <strong>Peso:</strong> sobrepeso u obesidad</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px;">
+          <label for="detallesSalud">Detalles adicionales de los problemas de salud seleccionados:</label>
+          <textarea id="detallesSalud" class="form-control" rows="4" placeholder="Especifique medicamentos, dosis, tipo de lentes, grado de las condiciones mencionadas, etc. Esta información es crucial para el examen médico."></textarea>
+        </div>
+      </div>
+      
+      <!-- Aviso importante -->
+      <div class="health-warning" style="background: linear-gradient(135deg, #ff7675, #fd79a8); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+        <h4 style="margin-bottom: 10px;">📝 ¡IMPORTANTE!</h4>
+        <p style="margin: 0;">Si tienes alguno de estos problemas, dímelo antes de agendar. Es importante para tu pase médico.</p>
+      </div>
+      
+      <!-- Consentimiento del cliente -->
+      <div class="health-consent" style="background: linear-gradient(135deg, #00b894, #00cec9); padding: 25px; border-radius: 15px; margin: 20px 0;">
+        <h4 style="color: white; margin-bottom: 15px;">✅ Consentimiento Informado</h4>
+        <label style="display: flex; align-items: flex-start; cursor: pointer; color: white;">
+          <input type="checkbox" id="aceptaSalud" class="health-checkbox" style="margin-top: 3px;">
+          <span style="margin-left: 10px; line-height: 1.4;">Confirmo que el cliente ha leído, comprende y acepta todos los parámetros de salud requeridos para los exámenes médicos. Ha proporcionado información veraz sobre su estado de salud actual.</span>
+        </label>
       </div>
     </div>
 
@@ -861,18 +1015,6 @@
       </div>
     </div>
 
-    <!-- Parámetros de salud -->
-    <div class="card">
-      <div class="health-section">
-        <h2>⚕️ Parámetros de Salud</h2>
-        <p style="margin-bottom: 15px;">Es importante que el cliente lea y comprenda las condiciones de salud antes de proceder con los exámenes médicos.</p>
-        <label style="display: flex; align-items: center; cursor: pointer;">
-          <input type="checkbox" id="aceptaSalud" class="health-checkbox">
-          <span>Confirmo que el cliente ha leído y acepta los parámetros de salud requeridos</span>
-        </label>
-      </div>
-    </div>
-
     <!-- Acciones -->
     <div class="actions">
       <button class="btn" onclick="generarFacturaPDF()">
@@ -1047,6 +1189,12 @@
         document.getElementById('discapacidad').value = 'Ninguna';
         document.getElementById('observacionesDiscapacidad').value = '';
         document.getElementById('observacionesGroup').style.display = 'none';
+        
+        // Limpiar problemas de salud
+        document.querySelectorAll('.health-problem-checkbox').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        document.getElementById('detallesSalud').value = '';
         document.getElementById('aceptaSalud').checked = false;
         
         // Limpiar productos
@@ -1090,6 +1238,12 @@
       document.getElementById('discapacidad').value = 'Ninguna';
       document.getElementById('observacionesDiscapacidad').value = '';
       document.getElementById('observacionesGroup').style.display = 'none';
+      
+      // Limpiar problemas de salud
+      document.querySelectorAll('.health-problem-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      document.getElementById('detallesSalud').value = '';
       document.getElementById('aceptaSalud').checked = false;
       
       // Limpiar productos
@@ -1110,7 +1264,7 @@
       });
       
       calcularTotal();
-      mostrarNotificacion(`Factura ${codigoFactura} generada exitosamente. Formulario limpiado para el próximo cliente.`);
+      mostrarNotificacion('Factura generada exitosamente. Formulario limpiado para el próximo cliente.');
     }
 
     // Calcular total dinámicamente
@@ -1161,7 +1315,26 @@
       const empresa = document.getElementById("empresaCliente").value || "Particular";
       const discapacidad = document.getElementById("discapacidad").value;
       const observacionesDiscapacidad = document.getElementById("observacionesDiscapacidad").value || "Sin observaciones adicionales";
+      const detallesSalud = document.getElementById("detallesSalud").value || "Sin detalles adicionales";
       const aceptaSalud = document.getElementById("aceptaSalud").checked;
+
+      // Recopilar problemas de salud seleccionados
+      const problemasSeleccionados = [];
+      const problemasMapping = {
+        'medicamentos': '💊 Medicamentos (presión, azúcar, pastillas, etc.)',
+        'vista': '👁 Vista (daltonismo, lentes, visión baja)',
+        'dental': '🦷 Dental (caries, muelas picadas, dientes faltantes)',
+        'corazon': '❤ Corazón (hipertensión, arritmias)',
+        'diabetes': '🩸 Diabetes (azúcar alta, hemoglobina)',
+        'trigliceridos': '🧈 Triglicéridos y colesterol elevados',
+        'peso': '⚖ Peso (sobrepeso u obesidad)'
+      };
+
+      Object.keys(problemasMapping).forEach(id => {
+        if (document.getElementById(id).checked) {
+          problemasSeleccionados.push(problemasMapping[id]);
+        }
+      });
 
       let productos = [];
       let total = 0;
@@ -1213,7 +1386,7 @@
       doc.setFont(undefined, 'normal');
       doc.text("Sistema profesional de facturación para licencias federales digitales", 105, 25, { align: 'center' });
       
-      // Generar código único de factura (más corto)
+      // Generar código único de factura
       const fechaActual = new Date();
       const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
       const dia = fechaActual.getDate().toString().padStart(2, '0');
@@ -1231,10 +1404,6 @@
       doc.text(`Código: ${codigoFactura}`, 105, 58, { align: 'center' });
 
       // Información del cliente
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
-      
-      // Sección de información del cliente con mejor formato
       doc.setFillColor(248, 249, 250);
       doc.rect(15, 65, 180, 35, 'F');
       doc.setDrawColor(102, 126, 234);
@@ -1251,20 +1420,65 @@
       doc.text(`Teléfono: ${celular}`, 105, 81);
       doc.text(`Email: ${email}`, 105, 87);
       doc.text(`Fecha: ${new Date().toLocaleDateString('es-MX')}`, 105, 93);
+
+      // Información médica expandida
+      let yPos = 110;
       
-      // Información médica
-      let yPos = 93;
-      doc.text(`Discapacidad: ${discapacidad}`, 20, yPos);
+      // Sección de información médica
+      doc.setFillColor(255, 235, 167);
+      doc.rect(15, yPos, 180, 15, 'F');
+      doc.setDrawColor(225, 112, 85);
+      doc.rect(15, yPos, 180, 15);
+      
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'bold');
+      doc.text("INFORMACIÓN MÉDICA", 20, yPos + 8);
+      yPos += 20;
+      
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(10);
+      
+      // Discapacidad
+      doc.text(`Discapacidad reportada: ${discapacidad}`, 20, yPos);
+      yPos += 6;
       
       if (discapacidad !== "Ninguna" && observacionesDiscapacidad !== "Sin observaciones adicionales") {
-        const observacionesLines = doc.splitTextToSize(`Observaciones: ${observacionesDiscapacidad}`, 175);
-        yPos += 6;
+        const observacionesLines = doc.splitTextToSize(`Observaciones discapacidad: ${observacionesDiscapacidad}`, 175);
         doc.text(observacionesLines, 20, yPos);
-        yPos += observacionesLines.length * 4;
+        yPos += observacionesLines.length * 4 + 2;
+      }
+      
+      // Problemas de salud
+      if (problemasSeleccionados.length > 0) {
+        doc.setFont(undefined, 'bold');
+        doc.text("Problemas de salud reportados:", 20, yPos);
+        yPos += 6;
+        doc.setFont(undefined, 'normal');
+        
+        problemasSeleccionados.forEach(problema => {
+          const problemaLines = doc.splitTextToSize(`• ${problema}`, 175);
+          doc.text(problemaLines, 25, yPos);
+          yPos += problemaLines.length * 4;
+        });
+        yPos += 2;
+      } else {
+        doc.text("Problemas de salud: Ninguno reportado", 20, yPos);
+        yPos += 6;
+      }
+      
+      // Detalles adicionales de salud
+      if (detallesSalud !== "Sin detalles adicionales") {
+        doc.setFont(undefined, 'bold');
+        doc.text("Detalles adicionales de salud:", 20, yPos);
+        yPos += 6;
+        doc.setFont(undefined, 'normal');
+        const detallesLines = doc.splitTextToSize(detallesSalud, 175);
+        doc.text(detallesLines, 20, yPos);
+        yPos += detallesLines.length * 4 + 2;
       }
 
       // Tabla de productos
-      const startY = yPos > 93 ? yPos + 15 : 110;
+      const startY = yPos + 10;
       
       if (productos.length > 0) {
         doc.autoTable({
@@ -1298,16 +1512,21 @@
       doc.setFont(undefined, 'bold');
       doc.text(`TOTAL: ${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 170, finalY + 5, { align: 'center' });
 
-      // Información de salud
+      // Consentimiento informado
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
       doc.setFont(undefined, 'normal');
-      const textoSalud = aceptaSalud 
-        ? "✓ El cliente confirmó que leyó y acepta los parámetros de salud."
-        : "⚠ El cliente NO confirmó haber leído los parámetros de salud.";
-      doc.text(textoSalud, 20, finalY + 25);
+      const textoConsentimiento = aceptaSalud 
+        ? "✓ El cliente confirmó haber leído, comprendido y aceptado todos los parámetros de salud."
+        : "⚠ ADVERTENCIA: El cliente NO confirmó haber leído los parámetros de salud.";
+      
+      if (!aceptaSalud) {
+        doc.setTextColor(231, 76, 60); // Color rojo para advertencia
+      }
+      doc.text(textoConsentimiento, 20, finalY + 25);
 
       // Footer
+      doc.setTextColor(0, 0, 0);
       doc.setFontSize(8);
       doc.text("Gestoría Digital y Federal - Sistema profesional de licencias federales digitales", 105, 280, { align: 'center' });
 
