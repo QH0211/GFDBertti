@@ -790,6 +790,212 @@
     .arrow.rotated {
       transform: rotate(180deg);
     }
+
+    /* Estilos para el Modal de Aviso de Privacidad - Integrado con el tema */
+    .privacy-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, 
+        rgba(30, 60, 114, 0.4) 0%, 
+        rgba(74, 144, 226, 0.3) 50%, 
+        rgba(0, 0, 0, 0.6) 100%);
+      backdrop-filter: blur(15px);
+      animation: fadeInModal 0.4s ease-in-out;
+    }
+
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInModal {
+      from { 
+        opacity: 0; 
+        transform: translateY(-50px) scale(0.9); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+
+    .privacy-modal-content {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      backdrop-filter: blur(25px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 30px;
+      margin: 2% auto;
+      padding: 40px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 
+        0 25px 80px rgba(74, 144, 226, 0.3),
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        0 10px 40px rgba(255, 255, 255, 0.3);
+      animation: slideInModal 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .privacy-close {
+      color: rgba(30, 60, 114, 0.7);
+      float: right;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1;
+      margin-top: -15px;
+      margin-right: -10px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .privacy-close:hover {
+      color: #e53e3e;
+      background: rgba(229, 62, 62, 0.1);
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+    }
+
+    .privacy-footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 25px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .privacy-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, 
+        rgba(74, 144, 226, 0.1) 0%, 
+        rgba(255, 255, 255, 0.2) 100%);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .privacy-link:hover {
+      color: var(--secondary-color);
+      text-decoration: none;
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, 
+        rgba(74, 144, 226, 0.2) 0%, 
+        rgba(255, 255, 255, 0.3) 100%);
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    /* Estilos específicos para el contenido del modal */
+    .privacy-modal h3 {
+      color: var(--primary-color) !important;
+      font-weight: 700 !important;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8) !important;
+      margin-top: 30px !important;
+      margin-bottom: 15px !important;
+      font-size: 1.3rem !important;
+    }
+
+    .privacy-modal p, .privacy-modal li {
+      color: rgba(30, 60, 114, 0.9) !important;
+      font-weight: 500 !important;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .privacy-modal ul {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 15px 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 20px;
+    }
+
+    /* Responsive para móvil - OPTIMIZADO */
+    @media (max-width: 768px) {
+      .privacy-modal {
+        /* Simplificar para móvil */
+        background: rgba(0, 0, 0, 0.7) !important;
+        backdrop-filter: blur(5px) !important;
+      }
+      
+      .privacy-modal-content {
+        margin: 5% auto;
+        padding: 25px;
+        width: 95%;
+        max-height: 85vh;
+        border-radius: 20px !important;
+        /* Simplificar efectos para mejor rendimiento */
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      .privacy-footer {
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 15px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(5px) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .privacy-close {
+        font-size: 28px;
+        width: 35px;
+        height: 35px;
+        margin-top: -10px;
+        margin-right: -5px;
+      }
+
+      .privacy-modal h3 {
+        font-size: 1.2rem !important;
+        margin-top: 25px !important;
+      }
+
+      .privacy-modal p, .privacy-modal li {
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+      }
+
+      .privacy-modal ul {
+        background: rgba(240, 248, 255, 0.8) !important;
+        backdrop-filter: blur(3px) !important;
+        padding: 12px 15px !important;
+        border-radius: 10px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1791,14 +1997,27 @@
 
     // Función para limpiar todos los datos
     function limpiarTodosLosDatos() {
+      // Desactivar el aviso automático para evitar que aparezca al limpiar datos
+      mostrarAvisoAutomatico = false;
+      
       // Limpiar formulario de cliente
       document.getElementById('nombreCliente').value = '';
+      document.getElementById('celularCliente').value = '';
+      document.getElementById('emailCliente').value = '';
+      document.getElementById('empresaCliente').value = '';
+      document.getElementById('descripcionPadecimientos').value = '';
       document.getElementById('clausulaPadecimientos').checked = false;
       
       // Limpiar todas las cantidades de productos
       const cantidadInputs = document.querySelectorAll('input[type="number"]');
       cantidadInputs.forEach(input => {
         input.value = 0;
+      });
+      
+      // Desmarcar todos los checkboxes de productos
+      const checkboxes = document.querySelectorAll('.product-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
       });
       
       // Ocultar botón flotante
@@ -1810,7 +2029,12 @@
       // Limpiar productos seleccionados globalmente
       productosGlobales = [];
       
-      alert('Datos limpiados correctamente. Puede iniciar una nueva cotización.');
+      alert('✅ Datos limpiados correctamente. Puede iniciar una nueva cotización.');
+      
+      // Reactivar el aviso automático después de un breve delay
+      setTimeout(() => {
+        mostrarAvisoAutomatico = true;
+      }, 2000);
     }
 
     // Función para generar PDF como Blob
@@ -2113,6 +2337,169 @@
         targetButton.classList.add('active');
       }
     }
+
+    // Variable global para controlar si se debe mostrar el aviso automáticamente
+    let mostrarAvisoAutomatico = true;
+
+    // Funciones para el modal de aviso de privacidad
+    function abrirAvisoPrivacidad() {
+      document.getElementById('privacyModal').style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Evitar scroll del fondo
+    }
+
+    function cerrarAvisoPrivacidad() {
+      document.getElementById('privacyModal').style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restaurar scroll
+      // Marcar que el usuario ya vio el aviso en esta sesión
+      sessionStorage.setItem('avisoPrivacidadVisto', 'true');
+    }
+
+    // Función para mostrar el aviso automáticamente al cargar la página
+    function mostrarAvisoPrivacidadAutomatico() {
+      // Solo mostrar si no se ha visto en esta sesión y si está permitido
+      const yaVisto = sessionStorage.getItem('avisoPrivacidadVisto');
+      if (!yaVisto && mostrarAvisoAutomatico) {
+        // Pequeño delay para que la página termine de cargar
+        setTimeout(() => {
+          abrirAvisoPrivacidad();
+        }, 1000);
+      }
+    }
+
+    // Cerrar modal al hacer clic fuera de él
+    window.onclick = function(event) {
+      const modal = document.getElementById('privacyModal');
+      if (event.target == modal) {
+        cerrarAvisoPrivacidad();
+      }
+    }
+
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modal = document.getElementById('privacyModal');
+        if (modal.style.display === 'block') {
+          cerrarAvisoPrivacidad();
+        }
+      }
+    });
+
+    // Mostrar aviso automáticamente cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      mostrarAvisoPrivacidadAutomatico();
+    });
   </script>
+
+  <!-- Modal de Aviso de Privacidad -->
+  <div id="privacyModal" class="privacy-modal">
+    <div class="privacy-modal-content">
+      <span class="privacy-close" onclick="cerrarAvisoPrivacidad()">&times;</span>
+      
+      <h2 style="color: var(--primary-color); text-align: center; margin-bottom: 30px; font-size: 2rem; font-weight: 700;">
+        🔒 Aviso de Privacidad
+      </h2>
+      
+      <div style="line-height: 1.8; color: #333; font-size: 1rem;">
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">📋 Responsable del Tratamiento</h3>
+        <p><strong>DAMEX Transports</strong> es responsable del tratamiento de sus datos personales de conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">📊 Datos que Recopilamos</h3>
+        <p>Recopilamos los siguientes datos personales:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+          <li><strong>Datos de identificación:</strong> Nombre completo</li>
+          <li><strong>Datos de contacto:</strong> Número de celular, correo electrónico</li>
+          <li><strong>Datos laborales:</strong> Empresa u organización</li>
+          <li><strong>Datos de salud:</strong> Información sobre padecimientos médicos (opcional)</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">🎯 Finalidades del Tratamiento</h3>
+        <p>Sus datos personales serán utilizados para:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+          <li>Generar cotizaciones de servicios de licencias federales y capacitaciones</li>
+          <li>Contactarle para brindar información sobre nuestros servicios</li>
+          <li>Procesar solicitudes de exámenes psicofísicos</li>
+          <li>Cumplir con obligaciones legales y regulatorias</li>
+          <li>Mejorar nuestros servicios y atención al cliente</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">🔐 Protección de Datos</h3>
+        <p>Implementamos medidas de seguridad físicas, técnicas y administrativas para proteger sus datos personales contra daño, pérdida, alteración, destrucción o uso no autorizado.</p>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">⚖️ Sus Derechos ARCO</h3>
+        <p>Usted tiene derecho a:</p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+          <li><strong>Acceder</strong> a sus datos personales</li>
+          <li><strong>Rectificar</strong> datos inexactos o incompletos</li>
+          <li><strong>Cancelar</strong> el tratamiento de sus datos</li>
+          <li><strong>Oponerse</strong> al tratamiento para fines específicos</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">📞 Contacto</h3>
+        <p>Para ejercer sus derechos ARCO o cualquier consulta sobre este aviso de privacidad, puede contactarnos a través de los medios proporcionados en nuestro sitio web.</p>
+
+        <h3 style="color: var(--primary-color); margin-top: 25px; margin-bottom: 15px;">📅 Vigencia</h3>
+        <p>Este aviso de privacidad fue actualizado por última vez el <strong>29 de agosto de 2025</strong> y estará vigente hasta que se publique una nueva versión.</p>
+
+        <div style="background: rgba(74, 144, 226, 0.1); padding: 20px; border-radius: 15px; margin-top: 30px; border-left: 4px solid var(--primary-color);">
+          <p style="margin: 0; font-weight: 600; color: var(--primary-color);">
+            ✅ Al utilizar nuestros servicios, usted acepta los términos de este aviso de privacidad.
+          </p>
+        </div>
+
+        <!-- Botón Entendido -->
+        <div style="text-align: center; margin-top: 30px;">
+          <button onclick="cerrarAvisoPrivacidad()" style="
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 120, 212, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            min-width: 200px;
+          " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 35px rgba(0, 120, 212, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 120, 212, 0.4)'">
+            ✅ Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer con enlace al aviso de privacidad y contacto -->
+  <div class="privacy-footer">
+    <!-- Información de contacto -->
+    <div style="margin-bottom: 15px; padding: 15px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; backdrop-filter: blur(5px);">
+      <h4 style="margin: 0 0 10px 0; color: var(--primary-color); font-weight: 700; text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);">
+        📞 Contacto
+      </h4>
+      <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">📧</span>
+          <a href="mailto:consultoriadamex@gmail.com" style="color: var(--primary-color); text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='var(--secondary-color)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary-color)'; this.style.textDecoration='none'">
+            consultoriadamex@gmail.com
+          </a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">🇲🇽</span>
+          <a href="tel:+525525051252" style="color: var(--primary-color); text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='var(--secondary-color)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary-color)'; this.style.textDecoration='none'">
+            (+52) 55 2505 1252
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Copyright y aviso de privacidad -->
+    <p style="margin: 0; color: #666; font-size: 0.9rem;">
+      © 2025 DAMEX Transports. Todos los derechos reservados. | 
+      <span class="privacy-link" onclick="abrirAvisoPrivacidad()">Aviso de Privacidad</span>
+    </p>
+  </div>
+
 </body>
 </html>
