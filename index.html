@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestoría Digital y Federal - Sistema de Facturación</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/emailjs-com/3.2.0/email.min.js"></script>
+  <title>DAMEX Transports - Logística y Gestoría</title>
   <style>
+    :root {
+      --primary-color: #0078d4;
+      --secondary-color: #106ebe;
+      --accent-color: #40e0d0;
+      --success-color: #38a169;
+      --warning-color: #d69e2e;
+      --error-color: #e53e3e;
+      --text-color: #2d3748;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -16,9 +24,12 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 20%, #e6f3ff 40%, #4a90e2 100%);
       min-height: 100vh;
-      color: #333;
+      color: var(--text-color);
+      line-height: 1.6;
     }
 
     .container {
@@ -27,49 +38,551 @@
       padding: 20px;
     }
 
+    /* Responsive Design para Móvil */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      body {
+        font-size: 14px;
+      }
+      
+      /* Botón flotante móvil */
+      #botonFlotante {
+        bottom: 20px !important;
+        right: 20px !important;
+        left: 20px !important;
+      }
+      
+      .floating-button {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 18px 20px !important;
+        font-size: 1rem !important;
+        border-radius: 20px !important;
+      }
+      
+      /* Modal móvil */
+      #modalConfirmacion > div {
+        width: 95% !important;
+        margin: 10% auto !important;
+        max-height: 85vh !important;
+      }
+      
+      /* Botones del modal */
+      .modal-buttons {
+        flex-direction: column !important;
+        gap: 10px !important;
+      }
+      
+      .modal-buttons button {
+        width: 100% !important;
+        padding: 15px !important;
+      }
+      
+      /* Cards responsive */
+      .card {
+        padding: 20px !important;
+        margin-bottom: 20px !important;
+        border-radius: 20px !important;
+      }
+      
+      .card h2 {
+        font-size: 1.5rem !important;
+        margin-bottom: 20px !important;
+      }
+      
+      /* Header responsive */
+      .header-card {
+        padding: 25px !important;
+        margin-bottom: 25px !important;
+        border-radius: 20px !important;
+      }
+      
+      /* Logo móvil más prominente */
+      .logo {
+        max-width: 400px;
+        height: auto;
+        margin-bottom: 25px;
+        filter: drop-shadow(0 12px 35px rgba(74, 144, 226, 0.4));
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .logo:hover {
+        transform: scale(1.05) translateY(-5px);
+        filter: drop-shadow(0 20px 50px rgba(74, 144, 226, 0.5));
+      }
+      
+      /* Métricas móvil */
+      .metrics {
+        flex-direction: column !important;
+        gap: 20px !important;
+        margin-top: 25px !important;
+      }
+      
+      .metric-item {
+        text-align: center !important;
+        padding: 15px !important;
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.5) 0%, 
+          rgba(240, 248, 255, 0.4) 100%) !important;
+        border-radius: 15px !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+      }
+      
+      /* Tabs responsive */
+      .tabs-container {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+        border-radius: 20px !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+      }
+      
+      .tab-button {
+        margin: 5px 0 !important;
+        padding: 15px 10px !important;
+        font-size: 0.9rem !important;
+        border-radius: 15px !important;
+        text-align: center !important;
+        min-width: auto !important;
+      }
+      
+      /* Productos responsive */
+      .product-item {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 15px !important;
+        gap: 10px !important;
+      }
+      
+      .product-info {
+        margin-right: 0 !important;
+        margin-bottom: 10px !important;
+      }
+      
+      .product-code {
+        font-size: 1rem !important;
+      }
+      
+      .product-name {
+        font-size: 0.9rem !important;
+      }
+      
+      .product-price {
+        font-size: 1.1rem !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+      }
+      
+      .quantity-controls {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 10px !important;
+      }
+      
+      /* Formularios responsive */
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        padding: 15px !important;
+        font-size: 16px !important; /* Evita zoom en iOS */
+        border-radius: 12px !important;
+      }
+      
+      .form-group label {
+        font-size: 0.95rem !important;
+        margin-bottom: 10px !important;
+      }
+      
+      /* Header móvil mejorado */
+      .header {
+        padding: 30px 25px !important;
+        margin-bottom: 30px !important;
+        border-radius: 25px !important;
+      }
+      
+      /* Optimizaciones de rendimiento móvil */
+      * {
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      
+      /* Mejoras de rendimiento */
+    @media (min-width: 769px) {
+      .card, .product-item, .tab-button, .header, .metric-item {
+        will-change: transform;
+        backface-visibility: hidden;
+      }
+    }
+    
+    /* Optimizaciones específicas para móvil */
+    @media (max-width: 768px) {
+      /* Desactivar will-change en móvil para ahorrar memoria */
+      .card, .product-item, .tab-button, .header, .metric-item {
+        will-change: auto;
+      }
+      
+      /* Usar transform3d para activar aceleración por hardware solo cuando sea necesario */
+      .floating-button:active {
+        transform: translate3d(0, 2px, 0) !important;
+      }
+      
+      /* Reducir complejidad visual en móvil */
+      .tabs-container {
+        backdrop-filter: blur(5px) !important;
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.1) !important;
+      }
+    }
+      
+      /* Reducir efectos pesados en móvil */
+      .card, .product-item, .tab-button, .header, .metric-item {
+        backdrop-filter: blur(8px) !important; /* Reducido de 15px */
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.15) !important; /* Simplificado */
+        transition: transform 0.2s ease !important; /* Más rápido y simple */
+      }
+      
+      /* Eliminar hover effects en móvil para mejor rendimiento */
+      .card:hover, .product-item:hover, .tab-button:hover, .metric-item:hover {
+        transform: none !important;
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.15) !important;
+      }
+      
+      /* Header móvil optimizado */
+      .header {
+        backdrop-filter: blur(10px) !important; /* Reducido de 25px */
+        box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15) !important; /* Simplificado */
+      }
+      
+      .header:hover {
+        transform: none !important;
+        box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15) !important;
+      }
+      
+      /* Logo móvil sin animaciones pesadas */
+      .logo {
+        filter: drop-shadow(0 4px 15px rgba(74, 144, 226, 0.3)) !important; /* Reducido */
+        transition: none !important; /* Sin animaciones */
+      }
+      
+      .logo:hover {
+        transform: none !important;
+        filter: drop-shadow(0 4px 15px rgba(74, 144, 226, 0.3)) !important;
+      }
+      
+      /* Métricas móvil simplificadas */
+      .metric-item {
+        backdrop-filter: blur(5px) !important; /* Muy reducido */
+        box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1) !important; /* Mínimo */
+      }
+      
+      /* Modal móvil optimizado */
+      #modalConfirmacion {
+        backdrop-filter: blur(5px) !important; /* Reducido */
+      }
+      
+      #modalConfirmacion > div {
+        backdrop-filter: blur(8px) !important; /* Reducido */
+        box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2) !important; /* Simplificado */
+      }
+      
+      /* Botón flotante móvil optimizado */
+      .floating-button {
+        backdrop-filter: blur(8px) !important; /* Reducido */
+        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2) !important; /* Simplificado */
+      }
+    }
+
     .header {
       text-align: center;
       margin-bottom: 40px;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px;
+      padding: 50px 40px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      border-radius: 30px;
+      backdrop-filter: blur(25px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 25px 80px rgba(74, 144, 226, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        0 10px 40px rgba(255, 255, 255, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .header:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 35px 100px rgba(74, 144, 226, 0.25),
+        inset 0 2px 0 rgba(255, 255, 255, 0.7),
+        0 15px 50px rgba(255, 255, 255, 0.4);
+    }
+
+    .header-logo {
+      max-width: 600px;
+      height: auto;
+      display: block;
+      margin: 0 auto 30px auto;
+      filter: 
+        drop-shadow(0 8px 16px rgba(30, 60, 114, 0.3))
+        drop-shadow(0 4px 8px rgba(74, 144, 226, 0.2))
+        brightness(1.1)
+        contrast(1.05);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header-logo:hover {
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+      .header-logo {
+        max-height: 80px;
+      }
+    }
+
+    .tabs-container {
+      margin-bottom: 32px;
+    }
+
+    .tabs-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
+      padding: 8px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      gap: 4px;
     }
 
-    .header h1 {
-      color: #2c3e50;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .tabs-nav .product-item {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 4px 15px rgba(74, 144, 226, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      min-height: 60px;
+    }
+
+    .tab-button {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #1e3c72;
       font-weight: 700;
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      margin-right: 15px;
     }
 
-    .header p {
-      color: #7f8c8d;
-      font-size: 1.1rem;
+    @media (max-width: 768px) {
+      .tab-button {
+        flex: 1;
+        margin: 5px 0;
+        padding: 15px 10px;
+        font-size: 0.9rem;
+        border-radius: 15px;
+        text-align: center;
+      }
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, 
+        rgba(74, 144, 226, 0.4) 0%, 
+        rgba(30, 60, 114, 0.3) 100%);
+      border: 2px solid rgba(74, 144, 226, 0.6);
+      color: #1e3c72;
+      font-weight: 700;
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-      backdrop-filter: blur(10px);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
     }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    .header-card {
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .header-card {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+      }
     }
 
     .card h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      border-bottom: 3px solid #667eea;
-      padding-bottom: 10px;
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      margin: 16px 0;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      border: 2px solid rgba(0, 120, 212, 0.2);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 120, 212, 0.2);
+      border-color: rgba(0, 120, 212, 0.4);
+    }
+
+    .product-checkbox {
+      width: 20px;
+      height: 20px;
+      margin-right: 16px;
+      cursor: pointer;
+      accent-color: var(--primary-color);
+    }
+
+    .product-info {
+      flex: 1;
+      margin-right: 15px;
+    }
+
+    .product-code {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1rem;
+      margin-bottom: 4px;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .product-name {
+      color: var(--text-color);
+      font-size: 0.85rem;
+      line-height: 1.3;
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+
+    .product-price {
+      font-weight: 700;
+      color: var(--success-color);
+      font-size: 1.1rem;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      margin-right: 15px;
+    }
+
+    .quantity-input {
+      width: 50px;
+      padding: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.3) 100%);
+      backdrop-filter: blur(5px);
+      color: #1e3c72;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+    }
+
+    .delete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
     }
 
     .form-group {
@@ -79,1000 +592,895 @@
     .form-group label {
       display: block;
       margin-bottom: 8px;
-      font-weight: 600;
-      color: #2c3e50;
+      color: #1e3c72;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
     }
 
     .form-control {
       width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e1e8ed;
-      border-radius: 10px;
-      font-size: 16px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      background: white;
+      padding: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.1) 100%);
+      backdrop-filter: blur(10px);
+      color: #1e3c72;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 15px rgba(74, 144, 226, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .form-control:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .form-control:required {
-      border-left: 4px solid #e74c3c;
-    }
-
-    .form-control:required:valid {
-      border-left: 4px solid #27ae60;
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .dropdown-section {
-      margin-bottom: 30px;
-    }
-
-    .dropdown-header {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      padding: 15px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.3s ease;
-      margin-bottom: 10px;
-    }
-
-    .dropdown-header:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .dropdown-content {
-      display: none;
-      background: #f8f9fa;
-      border-radius: 10px;
-      padding: 20px;
-      border: 2px solid #e1e8ed;
-    }
-
-    .dropdown-content.active {
-      display: block;
-      animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .product-item {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      margin-bottom: 10px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .product-item:hover {
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
       transform: translateY(-2px);
     }
 
-    .product-checkbox {
-      margin-right: 15px;
-      transform: scale(1.2);
-    }
-
-    .product-info {
-      flex: 1;
-      margin-right: 15px;
-    }
-
-    .product-code {
-      font-weight: bold;
-      color: #667eea;
-      font-size: 0.9rem;
-    }
-
-    .product-name {
-      color: #2c3e50;
-      margin: 5px 0;
-      font-size: 0.95rem;
-    }
-
-    .product-price {
-      color: #27ae60;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    .quantity-input {
-      width: 70px;
-      padding: 8px;
-      border: 2px solid #e1e8ed;
-      border-radius: 5px;
-      text-align: center;
-      margin-right: 10px;
-    }
-
-    .delete-btn {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .product-item.selected .delete-btn {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .delete-btn:hover {
-      background: linear-gradient(135deg, #c0392b, #a93226);
-      transform: scale(1.05);
-    }
-
-    .package-item {
+    .actions {
       display: flex;
-      align-items: center;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs-container {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
       padding: 20px;
-      margin-bottom: 15px;
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-      border-radius: 10px;
-      border-left: 5px solid #667eea;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .package-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .package-checkbox {
-      margin-right: 20px;
-      transform: scale(1.3);
-    }
-
-    .package-info {
-      flex: 1;
-    }
-
-    .package-code {
-      font-weight: bold;
-      color: #667eea;
-      font-size: 1rem;
-    }
-
-    .package-description {
-      color: #2c3e50;
-      margin: 8px 0;
-      font-size: 1rem;
-    }
-
-    .package-price {
-      color: #27ae60;
-      font-weight: bold;
-      font-size: 1.3rem;
-    }
-
-    .package-delete-btn {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .package-item.selected .package-delete-btn {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .package-delete-btn:hover {
-      background: linear-gradient(135deg, #c0392b, #a93226);
-      transform: scale(1.05);
-    }
-
-    /* Estilos del panel de salud */
-    .health-problems-section {
-      background: linear-gradient(135deg, #ffeaa7, #fab1a0);
-      padding: 25px;
-      border-radius: 15px;
-      margin: 20px 0;
-      border-left: 5px solid #e17055;
-    }
-
-    .health-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 15px;
       margin-bottom: 20px;
-    }
-
-    .health-item {
-      background: rgba(255, 255, 255, 0.7);
-      padding: 15px;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .health-item:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .health-problem-checkbox {
-      margin-right: 10px;
-      transform: scale(1.2);
-      accent-color: #e74c3c;
-    }
-
-    .health-checkbox {
-      margin-right: 10px;
-      transform: scale(1.2);
-      accent-color: #00b894;
-    }
-
-    .health-warning {
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
-    }
-
-    .health-consent {
-      border: 3px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .health-consent:hover {
-      transform: scale(1.02);
-      transition: all 0.3s ease;
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
     }
 
     .btn {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      padding: 15px 30px;
+      padding: 14px 28px;
       border: none;
-      border-radius: 10px;
-      font-size: 16px;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 10px 10px 10px 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 8px 25px rgba(0, 120, 212, 0.4);
     }
 
-    .btn:active {
-      transform: translateY(-1px);
+    /* Estilos para categorías desplegables */
+    .dropdown-section {
+      margin-bottom: 20px;
     }
 
-    .btn-email {
-      background: linear-gradient(135deg, #74b9ff, #0984e3);
-    }
-
-    .btn-email:hover {
-      box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
-    }
-
-    .btn-clear {
-      background: linear-gradient(135deg, #fd79a8, #e84393);
-    }
-
-    .btn-clear:hover {
-      box-shadow: 0 10px 25px rgba(253, 121, 168, 0.3);
-    }
-
-    .btn-clear-all {
-      background: linear-gradient(135deg, #636e72, #2d3436);
-    }
-
-    .btn-clear-all:hover {
-      box-shadow: 0 10px 25px rgba(99, 110, 114, 0.3);
-    }
-
-    /* Total flotante */
-    .floating-total {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: linear-gradient(135deg, #00b894, #00cec9);
-      color: white;
-      padding: 20px 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      font-size: 1.2rem;
-      font-weight: bold;
-      z-index: 1000;
+    .dropdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.1) 0%, rgba(16, 110, 190, 0.05) 100%);
+      border-radius: 12px;
+      cursor: pointer;
       transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 120, 212, 0.2);
+      margin-bottom: 8px;
     }
 
-    .floating-total:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    .dropdown-header:hover {
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.15) 0%, rgba(16, 110, 190, 0.08) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 120, 212, 0.2);
     }
 
-    .actions {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
+    .dropdown-header span:first-child {
+      font-weight: 600;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .dropdown-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0 0 12px 12px;
+    }
+
+    .dropdown-content.active {
+      max-height: 2000px;
+      padding: 10px 0;
     }
 
     .arrow {
       transition: transform 0.3s ease;
+      font-size: 1.2rem;
+      color: var(--primary-color);
     }
 
     .arrow.rotated {
       transform: rotate(180deg);
     }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 2000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      min-width: 400px;
-    }
-
-    .close {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 24px;
-      cursor: pointer;
-      color: #999;
-    }
-
-    .close:hover {
-      color: #333;
-    }
-
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #00b894, #00cec9);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      z-index: 3000;
-      transform: translateX(350px);
-      transition: transform 0.3s ease;
-    }
-
-    .notification.show {
-      transform: translateX(0);
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 10px;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .card {
-        padding: 20px;
-      }
-      
-      .floating-total {
-        bottom: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        font-size: 1rem;
-      }
-      
-      .product-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-      }
-      
-      .package-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-      }
-      
-      .health-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      
-      .health-item {
-        padding: 12px;
-      }
-      
-      .health-item span {
-        font-size: 14px;
-        line-height: 1.3;
-      }
-      
-      .health-warning {
-        padding: 15px;
-      }
-      
-      .health-consent {
-        padding: 20px;
-      }
-      
-      .modal-content {
-        min-width: 300px;
-        margin: 20px;
-      }
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
+    <!-- Logo Principal -->
+    <div style="text-align: center; margin-bottom: 30px;">
+      <img src="Bannerdamex.png" alt="DAMEX Transports - Sistema de Cotización" class="header-logo">
+      <h1 style="
+        font-size: 2.5rem; 
+        margin: 20px 0 15px 0; 
+        font-weight: 800;
+        text-shadow: 2px 2px 8px rgba(30, 60, 114, 0.3);
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #4a90e2 75%, #87ceeb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      ">
+        Sistema de Cotización de Servicios
+      </h1>
+      <p style="
+        color: rgba(30, 60, 114, 0.8); 
+        font-size: 1.2rem; 
+        margin: 0;
+        font-weight: 500;
+        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+      ">
+        Licencias Federales • Capacitaciones • Paquetes Especiales
+      </p>
+    </div>
+
+    <!-- Card de Métricas -->
     <div class="header">
-      <h1>🚗 Gestoría Digital y Federal</h1>
-      <p>Sistema profesional de facturación para licencias federales digitales</p>
-    </div>
-
-    <!-- Información del cliente -->
-    <div class="card">
-      <h2>📋 Información del Cliente</h2>
-      <div class="form-group">
-        <label for="nombreCliente">Nombre completo del cliente:</label>
-        <input type="text" id="nombreCliente" class="form-control" placeholder="Ingrese el nombre completo del cliente" required>
-      </div>
+      <h2 style="
+        font-size: 1.5rem;
+        margin: 0 0 20px 0;
+        font-weight: 700;
+        text-align: center;
+        color: rgba(30, 60, 114, 0.9);
+        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+      ">
+        ¿Por qué elegir DAMEX?
+      </h2>
       
-      <div class="form-group">
-        <label for="celularCliente">Número de celular: *</label>
-        <input type="tel" id="celularCliente" class="form-control" placeholder="Ej: 55 1234 5678" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="emailCliente">Correo electrónico:</label>
-        <input type="email" id="emailCliente" class="form-control" placeholder="ejemplo@correo.com">
-      </div>
+      <!-- Métricas -->
+      <div style="
+        display: flex;
+        justify-content: space-around;
+        gap: 35px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      ">
+        <div style="
+          background: linear-gradient(135deg, rgba(184, 230, 184, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+          padding: 15px 20px;
+          border-radius: 15px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(184, 230, 184, 0.4);
+          text-align: center;
+          min-width: 140px;
+          box-shadow: 0 4px 15px rgba(184, 230, 184, 0.2);
+        ">
+          <div style="
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2e7d32;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+          ">100%</div>
+          <div style="
+            font-size: 0.9rem;
+            color: rgba(30, 60, 114, 0.8);
+            font-weight: 600;
+            margin-top: 2px;
+          ">Confiable</div>
+        </div>
 
-      <div class="form-group">
-        <label for="empresaCliente">Empresa/Organización:</label>
-        <input type="text" id="empresaCliente" class="form-control" placeholder="Nombre de la empresa (opcional)">
-      </div>
+        <div style="
+          background: linear-gradient(135deg, rgba(74, 144, 226, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+          padding: 15px 20px;
+          border-radius: 15px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(74, 144, 226, 0.4);
+          text-align: center;
+          min-width: 140px;
+          box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        ">
+          <div style="
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1976d2;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+          ">2000+</div>
+          <div style="
+            font-size: 0.9rem;
+            color: rgba(30, 60, 114, 0.8);
+            font-weight: 600;
+            margin-top: 2px;
+          ">Clientes Satisfechos</div>
+        </div>
 
-      <div class="form-group">
-        <label for="discapacidad">¿El cliente tiene alguna discapacidad?</label>
-        <select id="discapacidad" class="form-control" onchange="toggleObservaciones()">
-          <option value="Ninguna">Ninguna</option>
-          <option value="Visual">Visual</option>
-          <option value="Auditiva">Auditiva</option>
-          <option value="Motriz">Motriz</option>
-          <option value="Intelectual">Intelectual</option>
-        </select>
-      </div>
-
-      <div class="form-group" id="observacionesGroup" style="display: none;">
-        <label for="observacionesDiscapacidad">Observaciones sobre la discapacidad:</label>
-        <textarea id="observacionesDiscapacidad" class="form-control" rows="3" placeholder="Describa específicamente el tipo y grado de discapacidad, así como cualquier consideración especial que deba tomarse en cuenta para los exámenes médicos..."></textarea>
-      </div>
-    </div>
-
-    <!-- Panel de Salud Integral -->
-    <div class="card">
-      <h2>⚕️ Información Médica del Cliente</h2>
-      
-      <!-- Problemas de salud que debe avisar -->
-      <div class="health-problems-section">
-        <h3 style="color: #e74c3c; margin-bottom: 15px; font-size: 1.2rem;">🚨 Problemas de salud que debes avisar:</h3>
-        
-        <div class="health-grid">
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="medicamentos" class="health-problem-checkbox">
-              <span>💊 <strong>Medicamentos:</strong> presión, azúcar, pastillas, etc.</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="vista" class="health-problem-checkbox">
-              <span>👁 <strong>Vista:</strong> daltonismo, lentes, visión baja</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="dental" class="health-problem-checkbox">
-              <span>🦷 <strong>Dental:</strong> caries, muelas picadas, dientes faltantes</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="corazon" class="health-problem-checkbox">
-              <span>❤ <strong>Corazón:</strong> hipertensión, arritmias</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="diabetes" class="health-problem-checkbox">
-              <span>🩸 <strong>Diabetes:</strong> azúcar alta, hemoglobina</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="trigliceridos" class="health-problem-checkbox">
-              <span>🧈 <strong>Triglicéridos y colesterol:</strong> elevados</span>
-            </label>
-          </div>
-          
-          <div class="health-item">
-            <label style="display: flex; align-items: center; margin-bottom: 10px; cursor: pointer;">
-              <input type="checkbox" id="peso" class="health-problem-checkbox">
-              <span>⚖ <strong>Peso:</strong> sobrepeso u obesidad</span>
-            </label>
-          </div>
-        </div>
-        
-        <div class="form-group" style="margin-top: 20px;">
-          <label for="detallesSalud">Detalles adicionales de los problemas de salud seleccionados:</label>
-          <textarea id="detallesSalud" class="form-control" rows="4" placeholder="Especifique medicamentos, dosis, tipo de lentes, grado de las condiciones mencionadas, etc. Esta información es crucial para el examen médico."></textarea>
-        </div>
-      </div>
-      
-      <!-- Aviso importante -->
-      <div class="health-warning" style="background: linear-gradient(135deg, #ff7675, #fd79a8); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
-        <h4 style="margin-bottom: 10px;">📝 ¡IMPORTANTE!</h4>
-        <p style="margin: 0;">Si tienes alguno de estos problemas, dímelo antes de agendar. Es importante para tu pase médico.</p>
-      </div>
-      
-      <!-- Consentimiento del cliente -->
-      <div class="health-consent" style="background: linear-gradient(135deg, #00b894, #00cec9); padding: 25px; border-radius: 15px; margin: 20px 0;">
-        <h4 style="color: white; margin-bottom: 15px;">✅ Consentimiento Informado</h4>
-        <label style="display: flex; align-items: flex-start; cursor: pointer; color: white;">
-          <input type="checkbox" id="aceptaSalud" class="health-checkbox" style="margin-top: 3px;">
-          <span style="margin-left: 10px; line-height: 1.4;">Confirmo que el cliente ha leído, comprende y acepta todos los parámetros de salud requeridos para los exámenes médicos. Ha proporcionado información veraz sobre su estado de salud actual.</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Productos por categorías -->
-    <div class="card">
-      <h2>🛍️ Selección de Servicios</h2>
-      
-      <!-- Exámenes Médicos -->
-      <div class="dropdown-section">
-        <div class="dropdown-header" onclick="toggleDropdown('examenes')">
-          <span>🏥 Exámenes Psicofísicos</span>
-          <span class="arrow" id="arrow-examenes">▼</span>
-        </div>
-        <div class="dropdown-content" id="examenes">
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="3500" data-code="CF01" data-name="EXAMEN PSICOFISICO INTEGRAL SCT PRESENCIAL" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF01</div>
-              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL SCT PRESENCIAL</div>
-              <div class="product-price">$3,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="5500" data-code="CF02" data-name="EXAMEN PSICOFISICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF02</div>
-              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL</div>
-              <div class="product-price">$5,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="16000" data-code="CF17" data-name="EXAMEN PSICOFISICO INTEGRAL NP" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF17</div>
-              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP</div>
-              <div class="product-price">$16,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="20000" data-code="CF18" data-name="EXAMEN PSICOFISICO INTEGRAL NP EXPRES" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF18</div>
-              <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP EXPRES</div>
-              <div class="product-price">$20,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cursos de Capacitación -->
-      <div class="dropdown-section">
-        <div class="dropdown-header" onclick="toggleDropdown('cursos')">
-          <span>📚 Cursos de Capacitación</span>
-          <span class="arrow" id="arrow-cursos">▼</span>
-        </div>
-        <div class="dropdown-content" id="cursos">
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF03" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT A" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF03</div>
-              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT A</div>
-              <div class="product-price">$1,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF04" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT B" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF04</div>
-              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT B</div>
-              <div class="product-price">$1,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF05" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E MyRP" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF05</div>
-              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E MyRP</div>
-              <div class="product-price">$1,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF06" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E DA" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF06</div>
-              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E DA</div>
-              <div class="product-price">$1,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF07" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT F" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF07</div>
-              <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT F</div>
-              <div class="product-price">$1,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Licencias Digitales -->
-      <div class="dropdown-section">
-        <div class="dropdown-header" onclick="toggleDropdown('licencias')">
-          <span>🆔 Licencias Federales Digitales</span>
-          <span class="arrow" id="arrow-licencias">▼</span>
-        </div>
-        <div class="dropdown-content" id="licencias">
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="205" data-code="CF08" data-name="PAGO DE DERECHOS" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF08</div>
-              <div class="product-name">PAGO DE DERECHOS</div>
-              <div class="product-price">$205.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="295" data-code="CF09" data-name="DIGITALIZACION LICENCIA FEDERAL" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF09</div>
-              <div class="product-name">DIGITALIZACIÓN LICENCIA FEDERAL</div>
-              <div class="product-price">$295.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF10" data-name="LICENCIA FEDERAL DIGITAL INTERNACIONAL" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF10</div>
-              <div class="product-name">LICENCIA FEDERAL DIGITAL INTERNACIONAL</div>
-              <div class="product-price">$1,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF11" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA A, B, F" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF11</div>
-              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA A, B, F</div>
-              <div class="product-price">$1,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF12" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E MyRP" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF12</div>
-              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E MyRP</div>
-              <div class="product-price">$2,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF13" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E DA" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF13</div>
-              <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E DA</div>
-              <div class="product-price">$2,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Servicios Adicionales -->
-      <div class="dropdown-section">
-        <div class="dropdown-header" onclick="toggleDropdown('adicionales')">
-          <span>⚙️ Servicios Adicionales</span>
-          <span class="arrow" id="arrow-adicionales">▼</span>
-        </div>
-        <div class="dropdown-content" id="adicionales">
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF14" data-name="ADICION O CAMBIO DE CATEGORIA CAT A, B y F" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF14</div>
-              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT A, B y F</div>
-              <div class="product-price">$1,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF15" data-name="ADICION O CAMBIO DE CATEGORIA CAT E MyRP" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF15</div>
-              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E MyRP</div>
-              <div class="product-price">$2,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF16" data-name="ADICION O CAMBIO DE CATEGORIA CAT E DA" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF16</div>
-              <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E DA</div>
-              <div class="product-price">$2,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF19" data-name="LOGISTICA y GASTOS ADICIONALES (TERRESTRE)" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF19</div>
-              <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (TERRESTRE)</div>
-              <div class="product-price">$2,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="5000" data-code="CF20" data-name="LOGISTICA y GASTOS ADICIONALES (AEREO) NACIONAL FORANEO" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF20</div>
-              <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (AÉREO) NACIONAL FORÁNEO</div>
-              <div class="product-price">$5,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="12500" data-code="CF21" data-name="DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF21</div>
-              <div class="product-name">DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS</div>
-              <div class="product-price">$12,500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="700" data-code="CF22" data-name="PENALIZACION POR PAGO TARDIO CADA UNO" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF22</div>
-              <div class="product-name">PENALIZACIÓN POR PAGO TARDÍO CADA UNO</div>
-              <div class="product-price">$700.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF23" data-name="PENALIZACION POR NO ASISTENCIA AL EXAMEN MEDICO" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF23</div>
-              <div class="product-name">PENALIZACIÓN POR NO ASISTENCIA AL EXAMEN MÉDICO</div>
-              <div class="product-price">$1,000.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
-          
-          <div class="product-item">
-            <input type="checkbox" class="product-checkbox" data-price="500" data-code="CF24" data-name="REAGENDAR CITA MEDICA" onchange="updateProductSelection(this)">
-            <div class="product-info">
-              <div class="product-code">CF24</div>
-              <div class="product-name">REAGENDAR CITA MÉDICA</div>
-              <div class="product-price">$500.00</div>
-            </div>
-            <input type="number" class="quantity-input" min="1" value="1">
-            <button class="delete-btn" onclick="removeProduct(this)">❌ Quitar</button>
-          </div>
+        <div style="
+          background: linear-gradient(135deg, rgba(135, 206, 235, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+          padding: 15px 20px;
+          border-radius: 15px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(135, 206, 235, 0.4);
+          text-align: center;
+          min-width: 140px;
+          box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
+        ">
+          <div style="
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0288d1;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+          ">100%</div>
+          <div style="
+            font-size: 0.9rem;
+            color: rgba(30, 60, 114, 0.8);
+            font-weight: 600;
+            margin-top: 2px;
+          ">Más Rápido</div>
         </div>
       </div>
     </div>
 
-    <!-- Paquetes especiales -->
-    <div class="card">
-      <h2>📦 Paquetes Especiales</h2>
-      
-      <div class="package-item">
-        <input type="checkbox" class="package-checkbox" data-price="5000" data-code="PK01" data-name="COTIZACION LFD SCT (Incluye CF01, CF04, CF08, CF09)" onchange="updatePackageSelection(this)">
-        <div class="package-info">
-          <div class="package-code">PK01</div>
-          <div class="package-description">COTIZACIÓN LFD SCT (Incluye CF01, CF04, CF08, CF09)</div>
-          <div class="package-price">$5,000.00</div>
-        </div>
-        <button class="package-delete-btn" onclick="removePackage(this)">❌ Quitar</button>
+    <!-- Sistema de Pestañas -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <button class="tab-button active" onclick="switchTab('cliente')">👤 Cliente</button>
+        <button class="tab-button" onclick="switchTab('servicios')">🚛 Servicios y Paquetes</button>
       </div>
-      
-      <div class="package-item">
-        <input type="checkbox" class="package-checkbox" data-price="10500" data-code="PK02" data-name="COTIZACION LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)" onchange="updatePackageSelection(this)">
-        <div class="package-info">
-          <div class="package-code">PK02</div>
-          <div class="package-description">COTIZACIÓN LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)</div>
-          <div class="package-price">$10,500.00</div>
-        </div>
-        <button class="package-delete-btn" onclick="removePackage(this)">❌ Quitar</button>
-      </div>
-    </div>
 
-    <!-- Acciones -->
-    <div class="actions">
-      <button class="btn" onclick="generarFacturaPDF()">
-        📄 Descargar Factura PDF
-      </button>
-      <button class="btn btn-email" onclick="mostrarModalEmail()">
-        📧 Enviar por Email
-      </button>
-      <button class="btn btn-clear" onclick="limpiarSeleccionados()">
-        🧹 Limpiar Seleccionados
-      </button>
-      <button class="btn btn-clear-all" onclick="limpiarTodo()">
-        🗑️ Limpiar Todo
-      </button>
+      <!-- Pestaña: Información del Cliente -->
+      <div id="cliente" class="tab-content active">
+        <div class="card">
+          <h2>📋 Información del Cliente</h2>
+          <div class="form-group">
+            <label for="nombreCliente">Nombre completo del cliente:</label>
+            <input type="text" id="nombreCliente" class="form-control" placeholder="Ingrese el nombre completo del cliente" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="celularCliente">Número de celular: *</label>
+            <input type="tel" id="celularCliente" class="form-control" placeholder="Ej: 55 1234 5678" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="emailCliente">Correo electrónico:</label>
+            <input type="email" id="emailCliente" class="form-control" placeholder="ejemplo@correo.com">
+          </div>
+
+          <div class="form-group">
+            <label for="empresaCliente">Empresa/Organización:</label>
+            <input type="text" id="empresaCliente" class="form-control" placeholder="Nombre de la empresa (opcional)">
+          </div>
+
+          <!-- Advertencia de Padecimientos -->
+          <div class="warning-section" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%); border: 2px solid rgba(255, 193, 7, 0.3); border-radius: 15px; padding: 20px; margin: 20px 0; backdrop-filter: blur(10px);">
+            <h3 style="color: #f57c00; margin-bottom: 15px; font-size: 1.3rem; font-weight: 600;">⚠️ Problemas de salud que debes avisar:</h3>
+            
+            <div style="background: rgba(255, 255, 255, 0.8); border-radius: 10px; padding: 15px; margin-bottom: 15px; line-height: 1.6;">
+              <p style="margin: 8px 0;"><strong>💊 Medicamentos:</strong> presión, azúcar, pastillas, etc.</p>
+              <p style="margin: 8px 0;"><strong>👁 Vista:</strong> daltonismo, lentes, visión baja</p>
+              <p style="margin: 8px 0;"><strong>🦷 Dental:</strong> caries, muelas picadas, dientes faltantes</p>
+              <p style="margin: 8px 0;"><strong>❤ Corazón:</strong> hipertensión, arritmias</p>
+              <p style="margin: 8px 0;"><strong>🩸 Diabetes:</strong> azúcar alta, hemoglobina</p>
+              <p style="margin: 8px 0;"><strong>🧈 Triglicéridos y colesterol:</strong> elevados</p>
+              <p style="margin: 8px 0;"><strong>⚖ Peso:</strong> sobrepeso u obesidad</p>
+            </div>
+            
+            <div style="background: rgba(33, 150, 243, 0.1); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+              <p style="margin: 0; color: #1976d2; font-weight: 500;">📝 <strong>Si tienes alguno, dímelo antes de agendar. Es importante para tu pase médico.</strong></p>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label style="display: flex; align-items: center; cursor: pointer; font-weight: 600; color: #d32f2f;">
+                <input type="checkbox" id="clausulaPadecimientos" required style="margin-right: 10px; transform: scale(1.2);">
+                He leído y acepto la cláusula de padecimientos de salud *
+              </label>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label for="descripcionPadecimientos" style="font-weight: 600; color: #f57c00; margin-bottom: 8px; display: block;">
+                📝 Descripción de padecimientos (si aplica):
+              </label>
+              <textarea 
+                id="descripcionPadecimientos" 
+                class="form-control" 
+                placeholder="Si tienes algún padecimiento de los mencionados arriba, descríbelo aquí detalladamente. Ejemplo: Tomo medicamentos para la presión arterial, uso lentes para miopía, etc."
+                rows="4"
+                style="resize: vertical; min-height: 100px; background: rgba(255, 255, 255, 0.9); border: 2px solid rgba(255, 193, 7, 0.3); border-radius: 10px; padding: 12px; font-family: inherit;"
+              ></textarea>
+              <small style="color: #666; font-style: italic; margin-top: 5px; display: block;">
+                💡 Este campo es opcional, pero muy importante si tienes algún padecimiento que pueda afectar tu examen médico.
+              </small>
+            </div>
+
+            <!-- Botón Continuar -->
+            <div style="text-align: center; margin-top: 20px;">
+              <button class="btn" onclick="continuarAServicios()" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); font-size: 1.1rem; padding: 15px 30px;">
+                ➡️ Continuar a Servicios y Paquetes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña: Selección de Servicios -->
+      <div id="servicios" class="tab-content">
+        <div class="card">
+          <h2>🛍️ Selección de Servicios</h2>
+          
+          <!-- Exámenes Psicofísicos -->
+          <div class="dropdown-section">
+            <div class="dropdown-header" onclick="toggleDropdown('examenes')">
+              <span>🏥 Exámenes Psicofísicos</span>
+              <span class="arrow" id="arrow-examenes">▼</span>
+            </div>
+            <div class="dropdown-content" id="examenes">
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="3500" data-code="CF01" data-name="EXAMEN PSICOFISICO INTEGRAL SCT PRESENCIAL">
+                <div class="product-info">
+                  <div class="product-code">CF01</div>
+                  <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL SCT PRESENCIAL</div>
+                  <div class="product-price">$3,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="5500" data-code="CF02" data-name="EXAMEN PSICOFISICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL">
+                <div class="product-info">
+                  <div class="product-code">CF02</div>
+                  <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL TERCEROS AUTORIZADOS PRESENCIAL</div>
+                  <div class="product-price">$5,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="16000" data-code="CF17" data-name="EXAMEN PSICOFISICO INTEGRAL NP">
+                <div class="product-info">
+                  <div class="product-code">CF17</div>
+                  <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP</div>
+                  <div class="product-price">$16,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="20000" data-code="CF18" data-name="EXAMEN PSICOFISICO INTEGRAL NP EXPRES">
+                <div class="product-info">
+                  <div class="product-code">CF18</div>
+                  <div class="product-name">EXAMEN PSICOFÍSICO INTEGRAL NP EXPRES</div>
+                  <div class="product-price">$20,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cursos de Capacitación -->
+          <div class="dropdown-section">
+            <div class="dropdown-header" onclick="toggleDropdown('cursos')">
+              <span>📚 Cursos de Capacitación</span>
+              <span class="arrow" id="arrow-cursos">▼</span>
+            </div>
+            <div class="dropdown-content" id="cursos">
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF03" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT A">
+                <div class="product-info">
+                  <div class="product-code">CF03</div>
+                  <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT A</div>
+                  <div class="product-price">$1,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF04" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT B">
+                <div class="product-info">
+                  <div class="product-code">CF04</div>
+                  <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT B</div>
+                  <div class="product-price">$1,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF05" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E MyRP">
+                <div class="product-info">
+                  <div class="product-code">CF05</div>
+                  <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E MyRP</div>
+                  <div class="product-price">$1,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF06" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT E DA">
+                <div class="product-info">
+                  <div class="product-code">CF06</div>
+                  <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT E DA</div>
+                  <div class="product-price">$1,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF07" data-name="CONSTANCIA DE CURSO DE CAPACITACION CAT F">
+                <div class="product-info">
+                  <div class="product-code">CF07</div>
+                  <div class="product-name">CONSTANCIA DE CURSO DE CAPACITACIÓN CAT F</div>
+                  <div class="product-price">$1,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Licencias Federales Digitales -->
+          <div class="dropdown-section">
+            <div class="dropdown-header" onclick="toggleDropdown('licencias')">
+              <span>🆔 Licencias Federales Digitales</span>
+              <span class="arrow" id="arrow-licencias">▼</span>
+            </div>
+            <div class="dropdown-content" id="licencias">
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="205" data-code="CF08" data-name="PAGO DE DERECHOS">
+                <div class="product-info">
+                  <div class="product-code">CF08</div>
+                  <div class="product-name">PAGO DE DERECHOS</div>
+                  <div class="product-price">$205.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="295" data-code="CF09" data-name="DIGITALIZACION LICENCIA FEDERAL">
+                <div class="product-info">
+                  <div class="product-code">CF09</div>
+                  <div class="product-name">DIGITALIZACIÓN LICENCIA FEDERAL</div>
+                  <div class="product-price">$295.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF10" data-name="LICENCIA FEDERAL DIGITAL INTERNACIONAL">
+                <div class="product-info">
+                  <div class="product-code">CF10</div>
+                  <div class="product-name">LICENCIA FEDERAL DIGITAL INTERNACIONAL</div>
+                  <div class="product-price">$1,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF11" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA A, B, F">
+                <div class="product-info">
+                  <div class="product-code">CF11</div>
+                  <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA A, B, F</div>
+                  <div class="product-price">$1,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF12" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E MyRP">
+                <div class="product-info">
+                  <div class="product-code">CF12</div>
+                  <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E MyRP</div>
+                  <div class="product-price">$2,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF13" data-name="LICENCIA FEDERAL DIGITAL 1 CATEGORIA E DA">
+                <div class="product-info">
+                  <div class="product-code">CF13</div>
+                  <div class="product-name">LICENCIA FEDERAL DIGITAL 1 CATEGORÍA E DA</div>
+                  <div class="product-price">$2,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Servicios Adicionales -->
+          <div class="dropdown-section">
+            <div class="dropdown-header" onclick="toggleDropdown('adicionales')">
+              <span>⚙️ Servicios Adicionales</span>
+              <span class="arrow" id="arrow-adicionales">▼</span>
+            </div>
+            <div class="dropdown-content" id="adicionales">
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1500" data-code="CF14" data-name="ADICION O CAMBIO DE CATEGORIA CAT A, B y F">
+                <div class="product-info">
+                  <div class="product-code">CF14</div>
+                  <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT A, B y F</div>
+                  <div class="product-price">$1,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF15" data-name="ADICION O CAMBIO DE CATEGORIA CAT E MyRP">
+                <div class="product-info">
+                  <div class="product-code">CF15</div>
+                  <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E MyRP</div>
+                  <div class="product-price">$2,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF16" data-name="ADICION O CAMBIO DE CATEGORIA CAT E DA">
+                <div class="product-info">
+                  <div class="product-code">CF16</div>
+                  <div class="product-name">ADICIÓN O CAMBIO DE CATEGORÍA CAT E DA</div>
+                  <div class="product-price">$2,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="2000" data-code="CF19" data-name="LOGISTICA y GASTOS ADICIONALES (TERRESTRE)">
+                <div class="product-info">
+                  <div class="product-code">CF19</div>
+                  <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (TERRESTRE)</div>
+                  <div class="product-price">$2,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="5000" data-code="CF20" data-name="LOGISTICA y GASTOS ADICIONALES (AEREO) NACIONAL FORANEO">
+                <div class="product-info">
+                  <div class="product-code">CF20</div>
+                  <div class="product-name">LOGÍSTICA Y GASTOS ADICIONALES (AÉREO) NACIONAL FORÁNEO</div>
+                  <div class="product-price">$5,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="12500" data-code="CF21" data-name="DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS">
+                <div class="product-info">
+                  <div class="product-code">CF21</div>
+                  <div class="product-name">DICTAMEN NO APTO INCLUYE COSTOS OPERATIVOS</div>
+                  <div class="product-price">$12,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="700" data-code="CF22" data-name="PENALIZACION POR PAGO TARDIO CADA UNO">
+                <div class="product-info">
+                  <div class="product-code">CF22</div>
+                  <div class="product-name">PENALIZACIÓN POR PAGO TARDÍO CADA UNO</div>
+                  <div class="product-price">$700.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="1000" data-code="CF23" data-name="PENALIZACION POR NO ASISTENCIA AL EXAMEN MEDICO">
+                <div class="product-info">
+                  <div class="product-code">CF23</div>
+                  <div class="product-name">PENALIZACIÓN POR NO ASISTENCIA AL EXAMEN MÉDICO</div>
+                  <div class="product-price">$1,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="500" data-code="CF24" data-name="REAGENDAR CITA MEDICA">
+                <div class="product-info">
+                  <div class="product-code">CF24</div>
+                  <div class="product-name">REAGENDAR CITA MÉDICA</div>
+                  <div class="product-price">$500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Paquetes Especiales -->
+          <div class="dropdown-section" style="margin-top: 30px;">
+            <div class="dropdown-header" onclick="toggleDropdown('paquetes-especiales')">
+              <span>📦 Paquetes Especiales</span>
+              <span class="arrow" id="arrow-paquetes-especiales">▼</span>
+            </div>
+            <div class="dropdown-content" id="paquetes-especiales">
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="5000" data-code="PK01" data-name="COTIZACION LFD SCT (Incluye CF01, CF04, CF08, CF09)">
+                <div class="product-info">
+                  <div class="product-code">PK01</div>
+                  <div class="product-name">COTIZACIÓN LFD SCT (Incluye CF01, CF04, CF08, CF09)</div>
+                  <div class="product-price">$5,000.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+              
+              <div class="product-item">
+                <input type="checkbox" class="product-checkbox" data-price="10500" data-code="PK02" data-name="COTIZACION LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)">
+                <div class="product-info">
+                  <div class="product-code">PK02</div>
+                  <div class="product-name">COTIZACIÓN LFD TERCEROS AUTORIZADOS (Incluye CF04, CF05, CF08, CF09, CF15, CF19)</div>
+                  <div class="product-price">$10,500.00</div>
+                </div>
+                <input type="number" class="quantity-input" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Total flotante -->
-  <div class="floating-total" id="totalFlotante">
-    💰 Total: $0.00
+
+  <!-- Botón Flotante -->
+  <div id="botonFlotante" style="
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+    z-index: 1000; 
+    display: none;
+  ">
+    <button onclick="mostrarModalConfirmacion()" class="floating-button" style="
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.2) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
+      padding: 15px 25px;
+      color: #1e3c72;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 32px rgba(74, 144, 226, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 4px 20px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+    " 
+    onmouseover="this.style.transform='scale(1.05)'" 
+    onmouseout="this.style.transform='scale(1)'"
+    >
+      🛒 Total: <span id="totalFlotante">$0.00</span>
+    </button>
   </div>
 
-  <!-- Modal para envío de email -->
-  <div id="emailModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="cerrarModalEmail()">&times;</span>
-      <h2>📧 Enviar Factura por Email</h2>
-      <p>La factura será enviada al correo electrónico proporcionado del cliente.</p>
-      <div class="form-group">
-        <label>Correo del cliente:</label>
-        <input type="email" id="emailModalInput" class="form-control" placeholder="ejemplo@correo.com">
+  <!-- Modal de Confirmación -->
+  <div id="modalConfirmacion" style="
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+      rgba(74, 144, 226, 0.3) 0%, 
+      rgba(30, 60, 114, 0.5) 100%);
+    backdrop-filter: blur(10px);
+  ">
+    <div style="
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(240, 248, 255, 0.35) 50%, 
+        rgba(74, 144, 226, 0.15) 100%);
+      margin: 5% auto;
+      padding: 0;
+      border-radius: 25px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 
+        0 20px 60px rgba(74, 144, 226, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 8px 40px rgba(255, 255, 255, 0.2);
+    ">
+      <!-- Header del Modal -->
+      <div style="
+        background: linear-gradient(135deg, 
+          rgba(74, 144, 226, 0.4) 0%, 
+          rgba(30, 60, 114, 0.3) 100%);
+        color: #1e3c72;
+        padding: 25px;
+        border-radius: 25px 25px 0 0;
+        text-align: center;
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      ">
+        <h2 style="
+          margin: 0; 
+          font-size: 1.6rem; 
+          font-weight: 700;
+          text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        ">🛒 Confirmar Pedido</h2>
       </div>
-      <button class="btn btn-email" onclick="enviarPorEmail()">Enviar Factura</button>
+
+      <!-- Contenido del Modal -->
+      <div style="padding: 25px;">
+        <h3 style="
+          color: #1e3c72; 
+          margin-bottom: 15px;
+          font-weight: 600;
+          text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        ">📋 Productos Seleccionados:</h3>
+        <div id="productosModal" style="
+          max-height: 300px;
+          overflow-y: auto;
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.3) 0%, 
+            rgba(240, 248, 255, 0.2) 100%);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-radius: 15px;
+          margin-bottom: 20px;
+          backdrop-filter: blur(10px);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        ">
+          <!-- Se llenará dinámicamente -->
+        </div>
+
+        <!-- Total -->
+        <div style="
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.4) 0%, 
+            rgba(240, 248, 255, 0.35) 50%, 
+            rgba(74, 144, 226, 0.2) 100%);
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          border-radius: 15px;
+          padding: 20px;
+          text-align: center;
+          margin-bottom: 25px;
+          backdrop-filter: blur(15px);
+          box-shadow: 
+            0 4px 15px rgba(74, 144, 226, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        ">
+          <h3 style="
+            color: #1e3c72; 
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+          ">💰 Total: <span id="totalModal">$0.00</span></h3>
+        </div>
+
+        <!-- Botones -->
+        <div class="modal-buttons" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button onclick="cerrarModal()" style="
+            background: linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.4) 0%, 
+              rgba(255, 182, 193, 0.3) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: #8b0000;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+              0 4px 15px rgba(255, 182, 193, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+          " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            ❌ Cancelar
+          </button>
+          
+          <button onclick="confirmarYDescargarPDF()" style="
+            background: linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.4) 0%, 
+              rgba(240, 248, 255, 0.35) 50%, 
+              rgba(74, 144, 226, 0.2) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: #1e3c72;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+              0 4px 15px rgba(74, 144, 226, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+          " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            📄 Descargar PDF
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Notificación -->
-  <div id="notification" class="notification">
-    <span id="notificationText"></span>
-  </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    // Función para mostrar/ocultar observaciones de discapacidad
-    function toggleObservaciones() {
-      const discapacidad = document.getElementById("discapacidad").value;
-      const observacionesGroup = document.getElementById("observacionesGroup");
-      
-      if (discapacidad !== "Ninguna") {
-        observacionesGroup.style.display = "block";
+    // Verificar que jsPDF se cargó correctamente
+    window.addEventListener('load', function() {
+      if (typeof window.jspdf === 'undefined') {
+        console.error('jsPDF no se cargó correctamente');
       } else {
-        observacionesGroup.style.display = "none";
-        document.getElementById("observacionesDiscapacidad").value = "";
+        console.log('jsPDF cargado exitosamente');
       }
+    });
+  </script>
+  <script>
+    // Función para cambiar entre pestañas
+    function switchTab(tabName) {
+      // Ocultar todas las pestañas
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Desactivar todos los botones de pestañas
+      const tabButtons = document.querySelectorAll('.tab-button');
+      tabButtons.forEach(button => {
+        button.classList.remove('active');
+      });
+      
+      // Mostrar la pestaña seleccionada
+      document.getElementById(tabName).classList.add('active');
+      
+      // Activar el botón correspondiente
+      event.target.classList.add('active');
     }
 
-    let totalGlobal = 0;
-
-    // Funciones para mostrar/ocultar dropdowns
+    // Función para mostrar/ocultar dropdowns
     function toggleDropdown(id) {
       const content = document.getElementById(id);
       const arrow = document.getElementById('arrow-' + id);
@@ -1086,535 +1494,570 @@
       }
     }
 
-    // Función para mostrar notificaciones
-    function mostrarNotificacion(mensaje, tipo = 'success') {
-      const notification = document.getElementById('notification');
-      const notificationText = document.getElementById('notificationText');
+    // Función para continuar a servicios
+    function continuarAServicios() {
+      const nombreCliente = document.getElementById('nombreCliente').value.trim();
+      const clausulaPadecimientos = document.getElementById('clausulaPadecimientos').checked;
       
-      notificationText.textContent = mensaje;
-      notification.classList.add('show');
-      
-      if (tipo === 'error') {
-        notification.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
-      } else {
-        notification.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+      if (!nombreCliente || nombreCliente === '') {
+        alert('⚠️ Error: El nombre del cliente es obligatorio y no puede estar vacío.');
+        document.getElementById('nombreCliente').focus();
+        document.getElementById('nombreCliente').style.border = '2px solid #f44336';
+        return false;
       }
       
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 3000);
-    }
-
-    // Actualizar selección de productos
-    function updateProductSelection(checkbox) {
-      const productItem = checkbox.closest('.product-item');
-      if (checkbox.checked) {
-        productItem.classList.add('selected');
-      } else {
-        productItem.classList.remove('selected');
+      if (!clausulaPadecimientos) {
+        alert('⚠️ Error: Debe aceptar la cláusula de padecimientos de salud.');
+        document.getElementById('clausulaPadecimientos').focus();
+        return false;
       }
-      calcularTotal();
+      
+      // Restaurar borde normal si la validación es exitosa
+      document.getElementById('nombreCliente').style.border = '';
+      switchTabById('servicios');
     }
 
-    // Actualizar selección de paquetes
-    function updatePackageSelection(checkbox) {
-      const packageItem = checkbox.closest('.package-item');
-      if (checkbox.checked) {
-        packageItem.classList.add('selected');
-      } else {
-        packageItem.classList.remove('selected');
-      }
-      calcularTotal();
-    }
 
-    // Función para remover producto individual
-    function removeProduct(button) {
-      const productItem = button.closest('.product-item');
-      const checkbox = productItem.querySelector('.product-checkbox');
-      const productName = productItem.querySelector('.product-name').textContent;
-      
-      checkbox.checked = false;
-      productItem.classList.remove('selected');
-      calcularTotal();
-      mostrarNotificacion(`Producto "${productName}" eliminado de la selección`);
-    }
+    // Variables globales para el botón flotante
+    let totalGlobal = 0;
+    let productosGlobales = [];
 
-    // Función para remover paquete
-    function removePackage(button) {
-      const packageItem = button.closest('.package-item');
-      const checkbox = packageItem.querySelector('.package-checkbox');
-      const packageName = packageItem.querySelector('.package-description').textContent;
-      
-      checkbox.checked = false;
-      packageItem.classList.remove('selected');
-      calcularTotal();
-      mostrarNotificacion(`Paquete "${packageName}" eliminado de la selección`);
-    }
-
-    // Limpiar solo productos seleccionados
-    function limpiarSeleccionados() {
-      let contadorEliminados = 0;
-      
-      // Limpiar productos
-      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
-        checkbox.checked = false;
-        checkbox.closest('.product-item').classList.remove('selected');
-        contadorEliminados++;
-      });
-      
-      // Limpiar paquetes
-      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
-        checkbox.checked = false;
-        checkbox.closest('.package-item').classList.remove('selected');
-        contadorEliminados++;
-      });
-      
-      calcularTotal();
-      
-      if (contadorEliminados > 0) {
-        mostrarNotificacion(`Se eliminaron ${contadorEliminados} elementos de la selección`);
-      } else {
-        mostrarNotificacion('No había elementos seleccionados para eliminar', 'error');
-      }
-    }
-
-    // Limpiar todo el formulario
-    function limpiarTodo() {
-      if (confirm('¿Está seguro de que desea limpiar todos los datos? Esta acción no se puede deshacer.')) {
-        // Limpiar información del cliente
-        document.getElementById('nombreCliente').value = '';
-        document.getElementById('celularCliente').value = '';
-        document.getElementById('emailCliente').value = '';
-        document.getElementById('empresaCliente').value = '';
-        document.getElementById('discapacidad').value = 'Ninguna';
-        document.getElementById('observacionesDiscapacidad').value = '';
-        document.getElementById('observacionesGroup').style.display = 'none';
-        
-        // Limpiar problemas de salud
-        document.querySelectorAll('.health-problem-checkbox').forEach(checkbox => {
-          checkbox.checked = false;
-        });
-        document.getElementById('detallesSalud').value = '';
-        document.getElementById('aceptaSalud').checked = false;
-        
-        // Limpiar productos
-        document.querySelectorAll('.product-checkbox').forEach(checkbox => {
-          checkbox.checked = false;
-          checkbox.closest('.product-item').classList.remove('selected');
-        });
-        
-        // Limpiar paquetes
-        document.querySelectorAll('.package-checkbox').forEach(checkbox => {
-          checkbox.checked = false;
-          checkbox.closest('.package-item').classList.remove('selected');
-        });
-        
-        // Resetear cantidades
-        document.querySelectorAll('.quantity-input').forEach(input => {
-          input.value = 1;
-        });
-        
-        // Cerrar todos los dropdowns
-        document.querySelectorAll('.dropdown-content').forEach(content => {
-          content.classList.remove('active');
-        });
-        
-        document.querySelectorAll('.arrow').forEach(arrow => {
-          arrow.classList.remove('rotated');
-        });
-        
-        calcularTotal();
-        mostrarNotificacion('Todos los datos han sido limpiados correctamente');
-      }
-    }
-
-    // Función para limpiar después de generar factura
-    function limpiarDespuesDeFactura() {
-      // Limpiar información del cliente
-      document.getElementById('nombreCliente').value = '';
-      document.getElementById('celularCliente').value = '';
-      document.getElementById('emailCliente').value = '';
-      document.getElementById('empresaCliente').value = '';
-      document.getElementById('discapacidad').value = 'Ninguna';
-      document.getElementById('observacionesDiscapacidad').value = '';
-      document.getElementById('observacionesGroup').style.display = 'none';
-      
-      // Limpiar problemas de salud
-      document.querySelectorAll('.health-problem-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-      });
-      document.getElementById('detallesSalud').value = '';
-      document.getElementById('aceptaSalud').checked = false;
-      
-      // Limpiar productos
-      document.querySelectorAll('.product-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-        checkbox.closest('.product-item').classList.remove('selected');
-      });
-      
-      // Limpiar paquetes
-      document.querySelectorAll('.package-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-        checkbox.closest('.package-item').classList.remove('selected');
-      });
-      
-      // Resetear cantidades
-      document.querySelectorAll('.quantity-input').forEach(input => {
-        input.value = 1;
-      });
-      
-      calcularTotal();
-      mostrarNotificacion('Factura generada exitosamente. Formulario limpiado para el próximo cliente.');
-    }
-
-    // Calcular total dinámicamente
-    function calcularTotal() {
-      let total = 0;
-      
-      // Productos individuales
-      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
-        const price = parseFloat(checkbox.dataset.price);
-        const quantity = parseInt(checkbox.parentElement.querySelector('.quantity-input').value);
-        total += price * quantity;
-      });
-      
-      // Paquetes
-      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
-        const price = parseFloat(checkbox.dataset.price);
-        total += price;
-      });
-      
-      totalGlobal = total;
-      document.getElementById('totalFlotante').innerHTML = `💰 Total: ${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`;
-    }
-
-    // Event listeners para actualizar total
+    // Actualizar botón flotante cuando cambian los productos
     document.addEventListener('DOMContentLoaded', function() {
-      // Inputs de cantidad
-      document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('input', calcularTotal);
-      });
+      console.log('DOM cargado, configurando botón flotante...');
       
-      // Inicializar total
-      calcularTotal();
-    });
-
-    // Generar PDF
-    function generarFacturaPDF() {
-      if (!validarFormulario()) {
-        return;
-      }
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      // Datos del cliente
-      const nombre = document.getElementById("nombreCliente").value || "Cliente sin nombre";
-      const celular = document.getElementById("celularCliente").value || "Sin teléfono";
-      const email = document.getElementById("emailCliente").value || "Sin email";
-      const empresa = document.getElementById("empresaCliente").value || "Particular";
-      const discapacidad = document.getElementById("discapacidad").value;
-      const observacionesDiscapacidad = document.getElementById("observacionesDiscapacidad").value || "Sin observaciones adicionales";
-      const detallesSalud = document.getElementById("detallesSalud").value || "Sin detalles adicionales";
-      const aceptaSalud = document.getElementById("aceptaSalud").checked;
-
-      // Recopilar problemas de salud seleccionados
-      const problemasSeleccionados = [];
-      const problemasMapping = {
-        'medicamentos': '💊 Medicamentos (presión, azúcar, pastillas, etc.)',
-        'vista': '👁 Vista (daltonismo, lentes, visión baja)',
-        'dental': '🦷 Dental (caries, muelas picadas, dientes faltantes)',
-        'corazon': '❤ Corazón (hipertensión, arritmias)',
-        'diabetes': '🩸 Diabetes (azúcar alta, hemoglobina)',
-        'trigliceridos': '🧈 Triglicéridos y colesterol elevados',
-        'peso': '⚖ Peso (sobrepeso u obesidad)'
-      };
-
-      Object.keys(problemasMapping).forEach(id => {
-        if (document.getElementById(id).checked) {
-          problemasSeleccionados.push(problemasMapping[id]);
+      // Escuchar cambios en checkboxes y cantidades
+      document.addEventListener('change', function(e) {
+        console.log('Cambio detectado:', e.target.className);
+        if (e.target.classList.contains('product-checkbox') || e.target.classList.contains('quantity-input')) {
+          console.log('Actualizando botón flotante...');
+          recalcularTodoCompleto();
         }
       });
+      
+      // Actualización inicial
+      setTimeout(() => {
+        console.log('Ejecutando actualización inicial del botón flotante...');
+        recalcularTodoCompleto();
+      }, 500);
+    });
 
-      let productos = [];
-      let total = 0;
+    // Función para recalcular todo desde cero
+    function recalcularTodoCompleto() {
+      console.log('=== RECALCULANDO TODO DESDE CERO ===');
+      
+      // Limpiar arrays globales
+      productosGlobales = [];
+      totalGlobal = 0;
+      
+      // Obtener SOLO los checkboxes marcados
+      const checkboxesMarcados = document.querySelectorAll('.product-checkbox:checked');
+      console.log('Checkboxes marcados encontrados:', checkboxesMarcados.length);
+      
+      let nuevoTotal = 0;
+      let nuevosProductos = [];
 
-      // Procesar productos seleccionados
-      document.querySelectorAll('.product-checkbox:checked').forEach(checkbox => {
+      checkboxesMarcados.forEach((checkbox, index) => {
         const price = parseFloat(checkbox.dataset.price);
         const code = checkbox.dataset.code;
         const name = checkbox.dataset.name;
-        const quantity = parseInt(checkbox.parentElement.querySelector('.quantity-input').value);
+        const quantityInput = checkbox.closest('.product-item').querySelector('.quantity-input');
+        const quantity = parseInt(quantityInput.value) || 1;
         const subtotal = price * quantity;
         
-        total += subtotal;
-        productos.push([
-          code,
-          name,
-          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`,
-          quantity,
-          `${subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2})}`
-        ]);
+        console.log(`Producto ${index + 1}: ${code} - Cantidad: ${quantity}, Subtotal: ${subtotal}`);
+        
+        nuevoTotal += subtotal;
+        nuevosProductos.push({
+          code: code,
+          name: name,
+          price: price,
+          quantity: quantity,
+          subtotal: subtotal
+        });
       });
 
-      // Procesar paquetes seleccionados
-      document.querySelectorAll('.package-checkbox:checked').forEach(checkbox => {
+      // Actualizar variables globales
+      totalGlobal = nuevoTotal;
+      productosGlobales = nuevosProductos;
+      
+      console.log('NUEVO Total:', nuevoTotal);
+      console.log('NUEVOS Productos:', nuevosProductos);
+
+      // Actualizar UI
+      const botonFlotante = document.getElementById('botonFlotante');
+      const totalElement = document.getElementById('totalFlotante');
+      
+      if (botonFlotante && totalElement) {
+        if (nuevoTotal > 0) {
+          totalElement.textContent = `$${nuevoTotal.toLocaleString('es-MX', {minimumFractionDigits: 2})}`;
+          botonFlotante.style.display = 'block';
+          console.log('✅ Botón flotante mostrado con total:', totalElement.textContent);
+        } else {
+          botonFlotante.style.display = 'none';
+          totalElement.textContent = '$0.00';
+          console.log('❌ Botón flotante ocultado (total = 0)');
+        }
+      } else {
+        console.error('ERROR: No se encontraron los elementos del botón flotante');
+      }
+    }
+
+    // Función para quitar producto del modal
+    function quitarProductoModal(index) {
+      console.log('Quitando producto del modal, index:', index);
+      
+      // Obtener el producto que se va a quitar
+      const productoAQuitar = productosGlobales[index];
+      console.log('Producto a quitar:', productoAQuitar);
+      
+      // Encontrar el checkbox correspondiente y desmarcarlo
+      const checkboxes = document.querySelectorAll('.product-checkbox');
+      checkboxes.forEach(checkbox => {
+        if (checkbox.dataset.code === productoAQuitar.code) {
+          checkbox.checked = false;
+          // También resetear la cantidad a 1
+          const quantityInput = checkbox.parentElement.querySelector('.quantity-input');
+          if (quantityInput) {
+            quantityInput.value = 1;
+          }
+          console.log('Checkbox desmarcado para:', productoAQuitar.code);
+        }
+      });
+      
+      // Recalcular todo desde cero
+      recalcularTodoCompleto();
+      
+      if (productosGlobales.length === 0) {
+        cerrarModal();
+        return;
+      }
+      
+      // Actualizar el modal
+      mostrarModalConfirmacion();
+    }
+
+    // Función para mostrar modal de confirmación
+    function mostrarModalConfirmacion() {
+      if (productosGlobales.length === 0) {
+        alert('No hay productos seleccionados');
+        return;
+      }
+
+      let productosHTML = '';
+      productosGlobales.forEach((producto, index) => {
+        productosHTML += `
+          <div style="
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.1) 0%, 
+              rgba(240, 248, 255, 0.05) 100%);
+            border-radius: 8px;
+            margin-bottom: 8px;
+          ">
+            <div style="flex: 1;">
+              <div style="font-weight: bold; color: #1e3c72; font-size: 0.95rem;">${producto.code}</div>
+              <div style="color: #1e3c72; font-size: 0.85rem; margin: 2px 0;">${producto.name}</div>
+              <div style="color: #666; font-size: 0.75rem;">Cantidad: ${producto.quantity} x $${producto.price.toLocaleString('es-MX', {minimumFractionDigits: 2})}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="font-weight: bold; color: #1e3c72; font-size: 0.9rem;">
+                $${producto.subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2})}
+              </div>
+              <button onclick="quitarProductoModal(${index})" style="
+                background: linear-gradient(135deg, 
+                  rgba(255, 255, 255, 0.4) 0%, 
+                  rgba(255, 182, 193, 0.3) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 15px;
+                padding: 6px 10px;
+                color: #8b0000;
+                font-size: 0.8rem;
+                cursor: pointer;
+                backdrop-filter: blur(5px);
+                transition: all 0.2s ease;
+              " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                ❌
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('productosModal').innerHTML = productosHTML;
+      document.getElementById('totalModal').textContent = `$${totalGlobal.toLocaleString('es-MX', {minimumFractionDigits: 2})}`;
+      document.getElementById('modalConfirmacion').style.display = 'block';
+    }
+
+    // Función para cerrar modal
+    function cerrarModal() {
+      document.getElementById('modalConfirmacion').style.display = 'none';
+    }
+
+    // Función para confirmar y descargar PDF
+    function confirmarYDescargarPDF() {
+      const nombre = document.getElementById('nombreCliente').value.trim();
+      const clausulaPadecimientos = document.getElementById('clausulaPadecimientos').checked;
+
+      if (!nombre) {
+        alert('⚠️ Error: El nombre del cliente es obligatorio.');
+        cerrarModal();
+        switchTab('cliente');
+        document.getElementById('nombreCliente').focus();
+        return;
+      }
+
+      if (!clausulaPadecimientos) {
+        alert('⚠️ Error: Debe aceptar la cláusula de padecimientos de salud.');
+        cerrarModal();
+        switchTab('cliente');
+        document.getElementById('clausulaPadecimientos').focus();
+        return;
+      }
+
+      // Confirmación final antes de generar PDF
+      if (confirm('¿Está seguro de generar el PDF?\n\nDespués de la descarga se limpiarán todos los datos y regresará al inicio.')) {
+        // Cerrar modal y generar PDF
+        cerrarModal();
+        descargarFacturaPDF();
+        
+        // Limpiar todos los datos después de generar PDF
+        setTimeout(() => {
+          limpiarTodosLosDatos();
+          switchTab('cliente');
+        }, 1000); // Esperar 1 segundo para que termine la descarga
+      }
+    }
+
+    // Función para limpiar todos los datos
+    function limpiarTodosLosDatos() {
+      // Limpiar formulario de cliente
+      document.getElementById('nombreCliente').value = '';
+      document.getElementById('clausulaPadecimientos').checked = false;
+      
+      // Limpiar todas las cantidades de productos
+      const cantidadInputs = document.querySelectorAll('input[type="number"]');
+      cantidadInputs.forEach(input => {
+        input.value = 0;
+      });
+      
+      // Ocultar botón flotante
+      document.getElementById('botonFlotante').style.display = 'none';
+      
+      // Resetear totales
+      document.getElementById('totalFlotante').textContent = '$0.00';
+      
+      // Limpiar productos seleccionados globalmente
+      productosGlobales = [];
+      
+      alert('Datos limpiados correctamente. Puede iniciar una nueva cotización.');
+    }
+
+    // Función para generar PDF como Blob
+    async function generarPDFBlob() {
+      return new Promise((resolve, reject) => {
+        try {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+          const codigoFactura = generarCodigoFactura();
+          const fecha = new Date().toLocaleDateString('es-MX');
+          
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          
+          img.onload = function() {
+            const imgWidth = 80;
+            const imgHeight = 25;
+            const x = (210 - imgWidth) / 2;
+            doc.addImage(img, 'PNG', x, 10, imgWidth, imgHeight);
+            generarRestoPDFConLogo(doc, codigoFactura, fecha);
+            
+            const pdfBlob = doc.output('blob');
+            resolve(pdfBlob);
+          };
+          
+          img.onerror = function() {
+            generarRestoPDF(doc, codigoFactura, fecha);
+            const pdfBlob = doc.output('blob');
+            resolve(pdfBlob);
+          };
+          
+          img.src = 'Bannerdamex.png';
+          
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+
+    // Función para generar código único de factura
+    function generarCodigoFactura() {
+      const fecha = new Date();
+      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const dia = fecha.getDate().toString().padStart(2, '0');
+      const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+      
+      return `DMX${mes}${dia}${random}`;
+    }
+
+    // Función para descargar factura PDF
+    function descargarFacturaPDF() {
+      try {
+        // Verificar si jsPDF está disponible
+        if (typeof window.jspdf === 'undefined') {
+          alert('❌ Error: La librería PDF no se ha cargado correctamente. Por favor, recarga la página.');
+          return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Configuración
+        const codigoFactura = generarCodigoFactura();
+        const fecha = new Date().toLocaleDateString('es-MX');
+        
+        // Cargar logo y generar PDF
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = function() {
+          try {
+            // Agregar logo centrado
+            const imgWidth = 80;
+            const imgHeight = 25;
+            const x = (210 - imgWidth) / 2;
+            doc.addImage(img, 'PNG', x, 10, imgWidth, imgHeight);
+            
+            // Generar resto del PDF con logo
+            generarRestoPDFConLogo(doc, codigoFactura, fecha);
+          } catch (logoError) {
+            console.warn('Error al cargar logo, generando PDF sin logo:', logoError);
+            generarRestoPDF(doc, codigoFactura, fecha);
+          }
+        };
+        
+        img.onerror = function() {
+          console.warn('No se pudo cargar el logo, generando PDF sin logo');
+          generarRestoPDF(doc, codigoFactura, fecha);
+        };
+        
+        img.src = 'Bannerdamex.png';
+        
+      } catch (error) {
+        console.error('Error al generar PDF:', error);
+        alert('❌ Error al generar el PDF. Por favor, intenta nuevamente.');
+      }
+    }
+
+    // Función auxiliar para generar PDF con logo
+    function generarRestoPDFConLogo(doc, codigoFactura, fecha) {
+      // Título debajo del logo
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      doc.text('Sistema de Cotización de Servicios', 105, 45, { align: 'center' });
+      
+      // Línea separadora
+      doc.line(20, 55, 190, 55);
+      
+      // Continuar con el resto del contenido
+      generarContenidoPDF(doc, codigoFactura, fecha, 65);
+    }
+
+    // Función auxiliar para generar PDF sin logo
+    function generarRestoPDF(doc, codigoFactura, fecha) {
+      // Título principal
+      doc.setFontSize(20);
+      doc.setFont(undefined, 'bold');
+      doc.text('DAMEX TRANSPORTS', 105, 25, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      doc.text('Sistema de Cotización de Servicios', 105, 35, { align: 'center' });
+      
+      // Línea separadora
+      doc.line(20, 45, 190, 45);
+      
+      // Continuar con el resto del contenido
+      generarContenidoPDF(doc, codigoFactura, fecha, 55);
+    }
+
+    // Función para generar el contenido principal del PDF
+    function generarContenidoPDF(doc, codigoFactura, fecha, startY) {
+      
+      // Información de la factura
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('FACTURA / COTIZACIÓN', 20, startY);
+      
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.text(`Código: ${codigoFactura}`, 20, startY + 10);
+      doc.text(`Fecha: ${fecha}`, 20, startY + 20);
+      
+      // Información del cliente
+      let yPos = startY + 40;
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text('INFORMACIÓN DEL CLIENTE', 20, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      
+      const nombre = document.getElementById('nombreCliente').value.trim();
+      const celular = document.getElementById('celularCliente').value.trim();
+      const email = document.getElementById('emailCliente').value.trim();
+      const empresa = document.getElementById('empresaCliente').value.trim();
+      const padecimientos = document.getElementById('descripcionPadecimientos').value.trim();
+      
+      doc.text(`Nombre: ${nombre}`, 20, yPos);
+      yPos += 10;
+      if (celular) {
+        doc.text(`Celular: ${celular}`, 20, yPos);
+        yPos += 10;
+      }
+      if (email) {
+        doc.text(`Email: ${email}`, 20, yPos);
+        yPos += 10;
+      }
+      if (empresa) {
+        doc.text(`Empresa: ${empresa}`, 20, yPos);
+        yPos += 10;
+      }
+      
+      // Productos seleccionados
+      yPos += 10;
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text('PRODUCTOS Y SERVICIOS', 20, yPos);
+      
+      yPos += 15;
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'bold');
+      doc.text('CÓDIGO', 20, yPos);
+      doc.text('DESCRIPCIÓN', 50, yPos);
+      doc.text('CANT.', 140, yPos);
+      doc.text('PRECIO UNIT.', 155, yPos);
+      doc.text('SUBTOTAL', 180, yPos);
+      
+      yPos += 5;
+      doc.line(20, yPos, 190, yPos);
+      yPos += 10;
+      
+      const productosSeleccionados = document.querySelectorAll('.product-checkbox:checked');
+      let total = 0;
+      
+      doc.setFont(undefined, 'normal');
+      productosSeleccionados.forEach(checkbox => {
         const price = parseFloat(checkbox.dataset.price);
         const code = checkbox.dataset.code;
         const name = checkbox.dataset.name;
+        const quantityInput = checkbox.closest('.product-item').querySelector('.quantity-input');
+        const quantity = parseInt(quantityInput.value) || 1;
+        const subtotal = price * quantity;
+        total += subtotal;
         
-        total += price;
-        productos.push([
-          code,
-          name,
-          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`,
-          1,
-          `${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`
-        ]);
+        doc.text(code, 20, yPos);
+        
+        // Dividir nombre largo en múltiples líneas si es necesario
+        const maxWidth = 85;
+        const lines = doc.splitTextToSize(name, maxWidth);
+        doc.text(lines, 50, yPos);
+        
+        doc.text(quantity.toString(), 140, yPos);
+        doc.text(`$${price.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 155, yPos);
+        doc.text(`$${subtotal.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 180, yPos);
+        
+        yPos += Math.max(10, lines.length * 5);
+        
+        // Nueva página si es necesario
+        if (yPos > 240) {
+          doc.addPage();
+          yPos = 30;
+        }
       });
-
-      // Encabezado de la empresa
-      doc.setFillColor(102, 126, 234);
-      doc.rect(0, 0, 220, 40, 'F');
       
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.setFont(undefined, 'bold');
-      doc.text("GESTORÍA DIGITAL Y FEDERAL", 105, 15, { align: 'center' });
-      
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
-      doc.text("Sistema profesional de facturación para licencias federales digitales", 105, 25, { align: 'center' });
-      
-      // Generar código único de factura
-      const fechaActual = new Date();
-      const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
-      const dia = fechaActual.getDate().toString().padStart(2, '0');
-      const hora = fechaActual.getHours().toString().padStart(2, '0');
-      const minuto = fechaActual.getMinutes().toString().padStart(2, '0');
-      const codigoFactura = `GDF${mes}${dia}${hora}${minuto}`;
-      
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(16);
-      doc.setFont(undefined, 'bold');
-      doc.text("FACTURA", 105, 50, { align: 'center' });
-      
-      doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
-      doc.text(`Código: ${codigoFactura}`, 105, 58, { align: 'center' });
-
-      // Información del cliente
-      doc.setFillColor(248, 249, 250);
-      doc.rect(15, 65, 180, 35, 'F');
-      doc.setDrawColor(102, 126, 234);
-      doc.rect(15, 65, 180, 35);
-      
-      doc.setFontSize(11);
-      doc.setFont(undefined, 'bold');
-      doc.text("INFORMACIÓN DEL CLIENTE", 20, 73);
-      
-      doc.setFont(undefined, 'normal');
-      doc.setFontSize(10);
-      doc.text(`Cliente: ${nombre}`, 20, 81);
-      doc.text(`Empresa: ${empresa}`, 20, 87);
-      doc.text(`Teléfono: ${celular}`, 105, 81);
-      doc.text(`Email: ${email}`, 105, 87);
-      doc.text(`Fecha: ${new Date().toLocaleDateString('es-MX')}`, 105, 93);
-
-      // Información médica expandida
-      let yPos = 110;
-      
-      // Sección de información médica
-      doc.setFillColor(255, 235, 167);
-      doc.rect(15, yPos, 180, 15, 'F');
-      doc.setDrawColor(225, 112, 85);
-      doc.rect(15, yPos, 180, 15);
-      
-      doc.setFontSize(11);
-      doc.setFont(undefined, 'bold');
-      doc.text("INFORMACIÓN MÉDICA", 20, yPos + 8);
-      yPos += 20;
-      
-      doc.setFont(undefined, 'normal');
-      doc.setFontSize(10);
-      
-      // Discapacidad
-      doc.text(`Discapacidad reportada: ${discapacidad}`, 20, yPos);
-      yPos += 6;
-      
-      if (discapacidad !== "Ninguna" && observacionesDiscapacidad !== "Sin observaciones adicionales") {
-        const observacionesLines = doc.splitTextToSize(`Observaciones discapacidad: ${observacionesDiscapacidad}`, 175);
-        doc.text(observacionesLines, 20, yPos);
-        yPos += observacionesLines.length * 4 + 2;
-      }
-      
-      // Problemas de salud
-      if (problemasSeleccionados.length > 0) {
-        doc.setFont(undefined, 'bold');
-        doc.text("Problemas de salud reportados:", 20, yPos);
-        yPos += 6;
-        doc.setFont(undefined, 'normal');
-        
-        problemasSeleccionados.forEach(problema => {
-          const problemaLines = doc.splitTextToSize(`• ${problema}`, 175);
-          doc.text(problemaLines, 25, yPos);
-          yPos += problemaLines.length * 4;
-        });
-        yPos += 2;
-      } else {
-        doc.text("Problemas de salud: Ninguno reportado", 20, yPos);
-        yPos += 6;
-      }
-      
-      // Detalles adicionales de salud
-      if (detallesSalud !== "Sin detalles adicionales") {
-        doc.setFont(undefined, 'bold');
-        doc.text("Detalles adicionales de salud:", 20, yPos);
-        yPos += 6;
-        doc.setFont(undefined, 'normal');
-        const detallesLines = doc.splitTextToSize(detallesSalud, 175);
-        doc.text(detallesLines, 20, yPos);
-        yPos += detallesLines.length * 4 + 2;
-      }
-
-      // Tabla de productos
-      const startY = yPos + 10;
-      
-      if (productos.length > 0) {
-        doc.autoTable({
-          startY: startY,
-          head: [['Código', 'Concepto', 'Precio Unit.', 'Cant.', 'Subtotal']],
-          body: productos,
-          styles: {
-            fontSize: 9,
-            cellPadding: 3
-          },
-          headStyles: {
-            fillColor: [102, 126, 234],
-            textColor: 255,
-            fontStyle: 'bold'
-          },
-          alternateRowStyles: {
-            fillColor: [248, 249, 250]
-          }
-        });
-      } else {
-        doc.text("No se seleccionaron productos o servicios.", 20, startY);
-      }
-
       // Total
-      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : startY + 20;
-      
-      doc.setFillColor(0, 184, 148);
-      doc.rect(140, finalY - 5, 60, 15, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(14);
+      yPos += 10;
+      doc.line(140, yPos, 190, yPos);
+      yPos += 10;
       doc.setFont(undefined, 'bold');
-      doc.text(`TOTAL: ${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 170, finalY + 5, { align: 'center' });
-
-      // Consentimiento informado
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
-      doc.setFont(undefined, 'normal');
-      const textoConsentimiento = aceptaSalud 
-        ? "✓ El cliente confirmó haber leído, comprendido y aceptado todos los parámetros de salud."
-        : "⚠ ADVERTENCIA: El cliente NO confirmó haber leído los parámetros de salud.";
+      doc.setFontSize(12);
+      doc.text('TOTAL:', 140, yPos);
+      doc.text(`$${total.toLocaleString('es-MX', {minimumFractionDigits: 2})}`, 180, yPos);
       
-      if (!aceptaSalud) {
-        doc.setTextColor(231, 76, 60); // Color rojo para advertencia
+      // Observaciones (Padecimientos)
+      if (padecimientos) {
+        yPos += 20;
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('OBSERVACIONES MÉDICAS:', 20, yPos);
+        
+        yPos += 10;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        const observacionesLines = doc.splitTextToSize(padecimientos, 170);
+        doc.text(observacionesLines, 20, yPos);
+        yPos += observacionesLines.length * 5;
       }
-      doc.text(textoConsentimiento, 20, finalY + 25);
-
-      // Footer
-      doc.setTextColor(0, 0, 0);
+      
+      // Pie de página
       doc.setFontSize(8);
-      doc.text("Gestoría Digital y Federal - Sistema profesional de licencias federales digitales", 105, 280, { align: 'center' });
-
-      // Guardar PDF
-      doc.save(`Factura_${nombre.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`);
-
-      // Limpiar formulario después de generar la factura
-      setTimeout(() => {
-        limpiarDespuesDeFactura();
-      }, 500);
+      doc.setFont(undefined, 'normal');
+      doc.text('DAMEX Transports - Sistema de Cotización', 105, 280, { align: 'center' });
+      doc.text(`Generado el ${new Date().toLocaleString('es-MX')}`, 105, 285, { align: 'center' });
+      
+      // Descargar con nombre personalizado
+      const nombreCliente = document.getElementById('nombreCliente').value.trim();
+      const nombreArchivo = `DMX_${nombreCliente.replace(/\s+/g, '_')}_${codigoFactura}.pdf`;
+      doc.save(nombreArchivo);
+      
+      alert(`✅ Factura PDF generada exitosamente.\nCódigo: ${codigoFactura}`);
     }
 
-    // Modal de email
-    function mostrarModalEmail() {
-      if (!validarFormulario()) {
-        return;
-      }
+    // Validación en tiempo real para el campo nombre
+    document.addEventListener('DOMContentLoaded', function() {
+      const nombreInput = document.getElementById('nombreCliente');
       
-      const emailCliente = document.getElementById("emailCliente").value;
-      document.getElementById("emailModalInput").value = emailCliente;
-      document.getElementById("emailModal").style.display = "block";
-    }
+      nombreInput.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+          this.style.border = '';
+        }
+      });
+      
+      nombreInput.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+          this.style.border = '2px solid #f44336';
+        }
+      });
+    });
 
-    function cerrarModalEmail() {
-      document.getElementById("emailModal").style.display = "none";
-    }
-
-    function enviarPorEmail() {
-      const email = document.getElementById("emailModalInput").value;
+    // Función auxiliar para cambiar pestañas por ID
+    function switchTabById(tabName) {
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(tab => {
+        tab.classList.remove('active');
+      });
       
-      if (!email) {
-        mostrarNotificacion("Por favor, ingrese un correo electrónico válido.", "error");
-        return;
+      const tabButtons = document.querySelectorAll('.tab-button');
+      tabButtons.forEach(button => {
+        button.classList.remove('active');
+      });
+      
+      document.getElementById(tabName).classList.add('active');
+      
+      // Activar el botón correspondiente
+      const targetButton = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+      if (targetButton) {
+        targetButton.classList.add('active');
       }
-
-      // Aquí simularemos el envío por email
-      mostrarNotificacion(`Funcionalidad de envío por email en desarrollo. La factura se enviaría a: ${email}`, "error");
-      
-      cerrarModalEmail();
-    }
-
-    // Cerrar modal al hacer clic fuera
-    window.onclick = function(event) {
-      const modal = document.getElementById("emailModal");
-      if (event.target === modal) {
-        cerrarModalEmail();
-      }
-    }
-
-    // Validaciones mejoradas
-    function validarFormulario() {
-      const nombre = document.getElementById("nombreCliente").value.trim();
-      const celular = document.getElementById("celularCliente").value.trim();
-      const aceptaSalud = document.getElementById("aceptaSalud").checked;
-      
-      if (!nombre) {
-        mostrarNotificacion("Por favor, ingrese el nombre del cliente.", "error");
-        document.getElementById("nombreCliente").focus();
-        return false;
-      }
-      
-      if (!celular) {
-        mostrarNotificacion("Por favor, ingrese el número de celular del cliente.", "error");
-        document.getElementById("celularCliente").focus();
-        return false;
-      }
-      
-      // Validar formato básico de teléfono
-      const telefonoRegex = /^[\d\s\-\(\)\+]+$/;
-      if (!telefonoRegex.test(celular)) {
-        mostrarNotificacion("Por favor, ingrese un número de teléfono válido.", "error");
-        document.getElementById("celularCliente").focus();
-        return false;
-      }
-      
-      if (!aceptaSalud) {
-        mostrarNotificacion("Debe confirmar que el cliente acepta los parámetros de salud.", "error");
-        document.getElementById("aceptaSalud").focus();
-        return false;
-      }
-      
-      if (totalGlobal === 0) {
-        mostrarNotificacion("Debe seleccionar al menos un producto o servicio.", "error");
-        return false;
-      }
-      
-      return true;
     }
   </script>
 </body>
 </html>
+
