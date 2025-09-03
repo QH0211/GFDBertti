@@ -996,6 +996,166 @@
         border-radius: 10px !important;
       }
     }
+
+    /* Estilos para el botón flotante de contacto */
+    .floating-contact-button {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 25px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 120, 212, 0.4);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .floating-contact-button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 35px rgba(0, 120, 212, 0.5);
+    }
+
+    .contact-icon {
+      font-size: 1.2rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Estilos para el menú de contacto */
+    .contact-menu {
+      position: fixed;
+      bottom: 100px;
+      left: 30px;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(240, 248, 255, 0.9) 100%);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 280px;
+    }
+
+    .contact-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .contact-menu-content {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 120, 212, 0.1);
+    }
+
+    .contact-item:hover {
+      background: rgba(0, 120, 212, 0.1);
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(0, 120, 212, 0.2);
+    }
+
+    .contact-emoji {
+      font-size: 1.3rem;
+      min-width: 24px;
+    }
+
+    .whatsapp-logo {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      object-fit: contain;
+    }
+
+    .contact-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+      color: var(--secondary-color);
+    }
+
+    .whatsapp-link:hover {
+      color: #25d366;
+    }
+
+    /* Responsive para móvil */
+    @media (max-width: 768px) {
+      .floating-contact-button {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        border-radius: 50px;
+        justify-content: center;
+        padding: 15px 25px;
+        font-size: 1rem;
+        /* Mantener el mismo estilo que desktop */
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .contact-menu {
+        bottom: 80px;
+        left: 20px;
+        right: 20px;
+        min-width: auto;
+        padding: 15px;
+        border-radius: 15px;
+      }
+
+      .contact-item {
+        padding: 15px;
+        border-radius: 10px;
+      }
+
+      .contact-link {
+        font-size: 0.9rem;
+      }
+
+      /* Mantener efectos visuales en móvil */
+      .contact-menu {
+        backdrop-filter: blur(20px);
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.95) 0%, 
+          rgba(240, 248, 255, 0.9) 100%);
+      }
+    }
   </style>
 </head>
 <body>
@@ -2388,6 +2548,22 @@
     document.addEventListener('DOMContentLoaded', function() {
       mostrarAvisoPrivacidadAutomatico();
     });
+
+    // Función para mostrar/ocultar el menú de contacto
+    function toggleContactMenu() {
+      const menu = document.getElementById('contact-menu');
+      menu.classList.toggle('show');
+    }
+
+    // Cerrar el menú si se hace clic fuera de él
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('contact-menu');
+      const button = document.getElementById('floating-contact-btn');
+      
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
   </script>
 
   <!-- Modal de Aviso de Privacidad -->
@@ -2471,34 +2647,36 @@
     </div>
   </div>
 
-  <!-- Footer con enlace al aviso de privacidad y contacto -->
+  <!-- Copyright y aviso de privacidad -->
   <div class="privacy-footer">
-    <!-- Información de contacto -->
-    <div style="margin-bottom: 15px; padding: 15px; background: rgba(255, 255, 255, 0.2); border-radius: 15px; backdrop-filter: blur(5px);">
-      <h4 style="margin: 0 0 10px 0; color: var(--primary-color); font-weight: 700; text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);">
-        📞 Contacto
-      </h4>
-      <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.2rem;">📧</span>
-          <a href="mailto:consultoriadamex@gmail.com" style="color: var(--primary-color); text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='var(--secondary-color)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary-color)'; this.style.textDecoration='none'">
-            consultoriadamex@gmail.com
-          </a>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.2rem;">🇲🇽</span>
-          <a href="tel:+525525051252" style="color: var(--primary-color); text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='var(--secondary-color)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary-color)'; this.style.textDecoration='none'">
-            (+52) 55 2505 1252
-          </a>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Copyright y aviso de privacidad -->
     <p style="margin: 0; color: #666; font-size: 0.9rem;">
       © 2025 DAMEX Transports. Todos los derechos reservados. | 
       <span class="privacy-link" onclick="abrirAvisoPrivacidad()">Aviso de Privacidad</span>
     </p>
+  </div>
+
+  <!-- Botón flotante de contacto -->
+  <div id="floating-contact-btn" class="floating-contact-button" onclick="toggleContactMenu()">
+    <span class="contact-icon">📞</span>
+    <span class="contact-text">Contacto</span>
+  </div>
+
+  <!-- Menú de contacto desplegable -->
+  <div id="contact-menu" class="contact-menu">
+    <div class="contact-menu-content">
+      <div class="contact-item">
+        <span class="contact-emoji">📧</span>
+        <a href="mailto:consultoriadamex@gmail.com" class="contact-link">
+          consultoriadamex@gmail.com
+        </a>
+      </div>
+      <div class="contact-item">
+        <img src="wlogo.png" alt="WhatsApp" class="whatsapp-logo">
+        <a href="https://wa.me/525525051252" target="_blank" class="contact-link whatsapp-link">
+          WhatsApp: (+52) 55 2505 1252
+        </a>
+      </div>
+    </div>
   </div>
 
 </body>
